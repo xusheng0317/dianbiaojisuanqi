@@ -1,4 +1,4 @@
-const CACHE = 'meter-calc-v6';
+const CACHE = 'meter-v1';
 const SHELL = [
   './index.html',
   './manifest.json',
@@ -8,9 +8,7 @@ const SHELL = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(SHELL))
-  );
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)));
   self.skipWaiting();
 });
 
@@ -24,23 +22,18 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // jsonbin.io 的 API 请求绝对不能缓存，每次必须真正请求网络
+  // API 请求永远不走缓存，直接请求网络
   if (e.request.url.includes('jsonbin.io')) {
     e.respondWith(fetch(e.request));
     return;
   }
-
-  // 应用壳文件才走缓存
+  // 应用文件走缓存
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(res => {
-        if (res && res.status === 200) {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
-        }
-        return res;
-      }).catch(() => caches.match('./index.html'));
-    })
+    caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
+      if (res && res.status === 200) {
+        caches.open(CACHE).then(c => c.put(e.request, res.clone()));
+      }
+      return res;
+    }))
   );
 });
