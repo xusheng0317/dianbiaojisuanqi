@@ -1,4 +1,4 @@
-const CACHE = 'meter-calc-v1';
+const CACHE = 'meter-calc-v6';
 const SHELL = [
   './index.html',
   './manifest.json',
@@ -24,6 +24,13 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  // jsonbin.io 的 API 请求绝对不能缓存，每次必须真正请求网络
+  if (e.request.url.includes('jsonbin.io')) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
+
+  // 应用壳文件才走缓存
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
