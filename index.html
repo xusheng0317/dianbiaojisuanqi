@@ -10,6 +10,23 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>电表计算器</title>
+
+<script>
+  // ════════════════════════════════════════════
+  //   ★ 使用前只需填写一次，填完上传到 GitHub ★
+  //
+  //   步骤：
+  //   1. 打开 jsonbin.io，注册免费账号
+  //   2. 登录后点右上角头像 → API Keys
+  //   3. 复制 X-Master-Key，粘贴到下方引号里
+  //
+  const SHARED_KEY = '$2a$10$j9sUqRhWLdd522Wt96yMbeh8iHm3CZw/pqAYyRXmxGPRGLNo86g2.';
+  //
+  //   填好后保存文件，上传到 GitHub，所有人
+  //   打开同一个网址就能共享同步，无需再设置。
+  // ════════════════════════════════════════════
+</script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;color:#1a1a1a;}
@@ -21,6 +38,24 @@ html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC'
 .提示成功{background:#1D9E75;color:#fff;}
 .提示错误{background:#CC3333;color:#fff;}
 .提示普通{background:#333;color:#fff;}
+
+/* ══ 初始设置页 ══ */
+#设置引导页{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;}
+.引导卡片{width:100%;max-width:380px;background:#fff;border-radius:22px;padding:32px 28px;box-shadow:0 4px 28px rgba(0,0,0,.09);}
+.引导图标{font-size:48px;text-align:center;margin-bottom:16px;}
+.引导标题{font-size:24px;font-weight:700;text-align:center;margin-bottom:8px;}
+.引导说明{font-size:15px;color:#666;text-align:center;line-height:1.7;margin-bottom:28px;}
+.步骤列表{background:#F5F5F0;border-radius:14px;padding:18px 20px;margin-bottom:22px;}
+.步骤项{font-size:16px;color:#333;line-height:1.8;padding-left:4px;}
+.步骤项 b{color:#1a1a1a;}
+.引导输入标签{font-size:17px;font-weight:500;margin-bottom:10px;display:block;}
+.引导输入{width:100%;font-size:16px;border:2px solid #E0E0DA;border-radius:13px;padding:14px 16px;outline:none;background:#FAFAF8;font-family:'Courier New',monospace;color:#1a1a1a;margin-bottom:8px;word-break:break-all;}
+.引导输入:focus{border-color:#1D9E75;}
+.引导提示{font-size:13px;color:#aaa;margin-bottom:22px;line-height:1.6;}
+.引导主btn{width:100%;font-size:20px;font-weight:600;padding:18px;border-radius:14px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;}
+.引导主btn:active{opacity:.85;}
+.引导主btn:disabled{background:#ccc;}
+.跳过btn{width:100%;font-size:16px;padding:14px;border-radius:14px;background:transparent;color:#aaa;border:none;cursor:pointer;font-family:inherit;margin-top:10px;}
 
 /* ══ 首页 ══ */
 #首页{min-height:100vh;display:flex;flex-direction:column;padding-bottom:48px;}
@@ -40,10 +75,8 @@ html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC'
 .分组信息{flex:1;min-width:0;}
 .分组名称{font-size:20px;font-weight:600;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .分组码行{display:flex;align-items:center;gap:10px;}
-.码显示{font-size:16px;color:#888;font-weight:500;letter-spacing:2px;}
+.码显示{font-size:16px;color:#888;font-weight:500;letter-spacing:3px;}
 .最后使用{font-size:14px;color:#bbb;}
-.同步标记{font-size:13px;padding:2px 8px;border-radius:20px;background:#DCFCE7;color:#166534;font-weight:500;}
-.仅本地标记{font-size:13px;padding:2px 8px;border-radius:20px;background:#F3F4F6;color:#6B7280;font-weight:500;}
 .卡片右侧{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
 .进入箭头{font-size:24px;color:#ccc;line-height:1;}
 .删除分组btn{font-size:14px;font-weight:500;padding:6px 12px;border:1.5px solid #FECACA;border-radius:10px;background:#FEF2F2;color:#B91C1C;cursor:pointer;font-family:inherit;white-space:nowrap;}
@@ -56,30 +89,21 @@ html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC'
 
 /* ══ 弹层 ══ */
 #弹层遮罩{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;}
-.弹层内容{width:100%;background:#fff;border-radius:24px 24px 0 0;padding:28px 24px 52px;max-height:90vh;overflow-y:auto;}
-.弹层标题{font-size:22px;font-weight:700;margin-bottom:6px;}
-.弹层说明{font-size:15px;color:#555;margin-bottom:22px;line-height:1.7;}
-.弹层说明 b{color:#1a1a1a;}
-.输入标签{font-size:17px;font-weight:500;color:#333;margin-bottom:10px;display:block;}
-.文字输入{width:100%;font-size:17px;border:2px solid #E0E0DA;border-radius:13px;padding:14px 16px;outline:none;background:#FAFAF8;font-family:inherit;color:#1a1a1a;margin-bottom:6px;}
-.文字输入:focus{border-color:#1D9E75;}
-.输入提示{font-size:13px;color:#aaa;margin-bottom:18px;line-height:1.6;}
+.弹层内容{width:100%;background:#fff;border-radius:24px 24px 0 0;padding:28px 24px 52px;}
+.弹层标题{font-size:22px;font-weight:700;margin-bottom:8px;}
+.弹层说明{font-size:15px;color:#888;margin-bottom:24px;line-height:1.6;}
+.码输入框{width:100%;font-size:42px;font-weight:700;letter-spacing:10px;text-align:center;color:#1a1a1a;border:2px solid #E0E0DA;border-radius:14px;padding:18px 12px;outline:none;background:#FAFAF8;font-family:inherit;margin-bottom:8px;}
+.码输入框:focus{border-color:#1D9E75;}
+.码提示{font-size:14px;color:#aaa;text-align:center;margin-bottom:24px;}
 .弹层主btn{width:100%;font-size:20px;font-weight:600;padding:18px;border-radius:14px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;margin-bottom:12px;}
 .弹层主btn:active{opacity:.85;}
-.弹层主btn:disabled{background:#ccc;cursor:not-allowed;}
+.弹层主btn:disabled{background:#ccc;}
 .弹层次btn{width:100%;font-size:18px;font-weight:500;padding:15px;border-radius:14px;background:transparent;color:#888;border:2px solid #E8E8E4;cursor:pointer;font-family:inherit;}
 .弹层次btn:active{background:#F5F5F0;}
-
-/* 邀请码展示 */
-.邀请码展示{background:#F0FAF6;border:2px solid #A7F3D0;border-radius:16px;padding:20px;text-align:center;margin-bottom:20px;}
-.邀请码标签{font-size:15px;color:#065F46;margin-bottom:10px;font-weight:500;}
-.邀请码文字{font-size:18px;font-weight:700;color:#065F46;word-break:break-all;letter-spacing:1px;line-height:1.5;user-select:all;}
-.邀请码说明{font-size:14px;color:#0F6E56;margin-top:10px;line-height:1.6;}
-.复制btn{margin-top:12px;font-size:16px;font-weight:500;padding:10px 24px;border-radius:11px;border:2px solid #A7F3D0;background:#fff;color:#065F46;cursor:pointer;font-family:inherit;}
-.复制btn:active{background:#F0FAF6;}
-
-.提示块{background:#FFF8E1;border:1.5px solid #FDE68A;border-radius:13px;padding:14px 16px;margin-bottom:18px;}
-.提示块文字{font-size:15px;color:#92400E;line-height:1.7;}
+.新建码展示{background:#F0FAF6;border:2px solid #A7F3D0;border-radius:16px;padding:24px;text-align:center;margin-bottom:22px;}
+.新建码标签{font-size:16px;color:#065F46;font-weight:500;margin-bottom:10px;}
+.新建码数字{font-size:52px;font-weight:700;color:#065F46;letter-spacing:12px;}
+.新建码说明{font-size:15px;color:#0F6E56;margin-top:10px;line-height:1.6;}
 
 /* ══ 主应用 ══ */
 #主应用{min-height:100vh;padding-bottom:48px;}
@@ -136,15 +160,34 @@ html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC'
 <body>
 <div id="提示条"></div>
 
+<!-- ══ 初始设置引导（密钥未填时显示） ══ -->
+<div id="设置引导页" class="隐藏">
+  <div class="引导卡片">
+    <div class="引导图标">⚙️</div>
+    <div class="引导标题">首次使用设置</div>
+    <div class="引导说明">需要填入一个密钥，才能让所有人的公式保持同步。只需设置一次。</div>
+    <div class="步骤列表">
+      <div class="步骤项">① 打开 <b>jsonbin.io</b>，注册免费账号</div>
+      <div class="步骤项">② 登录后点右上角头像 → <b>API Keys</b></div>
+      <div class="步骤项">③ 复制 <b>X-Master-Key</b> 粘贴到下方</div>
+    </div>
+    <label class="引导输入标签">粘贴密钥</label>
+    <input class="引导输入" id="引导密钥框" type="text" placeholder="$2a$ 或 $2b$ 开头…" autocomplete="off">
+    <div class="引导提示">密钥只存在你的手机上，用于读写共享数据</div>
+    <button class="btn 引导主btn" onclick="保存引导密钥()">完成，进入程序</button>
+    <button class="btn 跳过btn" onclick="跳过设置()">暂时跳过（仅本机使用）</button>
+  </div>
+</div>
+
 <!-- ══ 首页 ══ -->
-<div id="首页">
+<div id="首页" class="隐藏">
   <div class="首页顶栏">
     <div class="首页大标题">⚡ 电表计算器<span>选择分组进入</span></div>
   </div>
   <div class="首页内容"><div id="分组列表区"></div></div>
   <div class="底部操作">
-    <button class="btn 主操作btn" onclick="打开加入弹层()">输入邀请码，加入分组</button>
-    <button class="btn 次操作btn" onclick="打开新建弹层()">新建分组</button>
+    <button class="btn 主操作btn" onclick="打开加入弹层()">输入共享码，加入分组</button>
+    <button class="btn 次操作btn" onclick="点新建()">新建分组，获取共享码</button>
   </div>
 </div>
 
@@ -174,191 +217,155 @@ html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC'
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.1/math.min.js"></script>
 <script>
 // ══ 存储键 ══
-const GROUPS_KEY = 'meter_groups_v2';
-const DATA_KEY   = c => 'meter_data_' + c;
-const BIN_KEY    = c => 'meter_bin_' + c;
-const APIKEY_KEY = c => 'meter_apikey_' + c; // 每个分组存自己的密钥
+const GROUPS_KEY   = 'meter_groups_v3';
+const RUNTIME_KEY  = 'meter_runtime_key';   // 运行时密钥（引导页或跳过后存储）
+const DATA_KEY     = c => 'meter_data_' + c;
+const BIN_KEY      = c => 'meter_bin_' + c;
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
+// ══ 获取实际使用的 API 密钥 ══
+// 优先级：代码里的 SHARED_KEY > 运行时手动输入的密钥
+function 获取密钥() {
+  if (typeof SHARED_KEY !== 'undefined' && SHARED_KEY && SHARED_KEY.length > 10) return SHARED_KEY;
+  return localStorage.getItem(RUNTIME_KEY) || '';
+}
+function 有密钥() { return !!获取密钥(); }
+
+// ══ 启动逻辑 ══
+function 启动() {
+  if (有密钥()) {
+    // 密钥已就绪（代码里写好了 或 之前已设置）
+    显示首页();
+  } else {
+    // 没有密钥，引导设置
+    document.getElementById('设置引导页').classList.remove('隐藏');
+  }
+}
+
+function 保存引导密钥() {
+  const k = document.getElementById('引导密钥框').value.trim();
+  if (!k || (!k.startsWith('$2a$') && !k.startsWith('$2b$'))) {
+    提示('请填入正确的密钥（$2a$ 或 $2b$ 开头）', '错误'); return;
+  }
+  localStorage.setItem(RUNTIME_KEY, k);
+  document.getElementById('设置引导页').classList.add('隐藏');
+  显示首页();
+  提示('设置成功！', '成功');
+}
+
+function 跳过设置() {
+  localStorage.setItem(RUNTIME_KEY, '__offline__');
+  document.getElementById('设置引导页').classList.add('隐藏');
+  显示首页();
+  提示('已进入本机模式，公式不会同步到他人', '普通');
+}
+
+function 显示首页() {
+  document.getElementById('首页').classList.remove('隐藏');
+  渲染首页();
+}
+
 // ══ 分组持久化 ══
 function 读分组列表() { try{return JSON.parse(localStorage.getItem(GROUPS_KEY)||'[]');}catch(e){return[];} }
-function 存分组列表(l) { localStorage.setItem(GROUPS_KEY,JSON.stringify(l)); }
+function 存分组列表(l) { localStorage.setItem(GROUPS_KEY, JSON.stringify(l)); }
 function 添加或更新分组(码, 名称) {
-  const l = 读分组列表().filter(g=>g.码!==码);
-  l.unshift({码, 名称, 时间:Date.now()});
+  const l = 读分组列表().filter(g => g.码 !== 码);
+  l.unshift({码, 名称, 时间: Date.now()});
   存分组列表(l);
 }
-function 删除分组记录(码) { 存分组列表(读分组列表().filter(g=>g.码!==码)); }
+function 删除分组记录(码) { 存分组列表(读分组列表().filter(g => g.码 !== 码)); }
 function 格式化时间(ts) {
-  if(!ts)return'';const d=Date.now()-ts;
-  if(d<60000)return'刚刚';if(d<3600000)return Math.floor(d/60000)+'分钟前';
-  if(d<86400000)return Math.floor(d/3600000)+'小时前';return Math.floor(d/86400000)+'天前';
-}
-
-// 每个分组有自己独立的 API 密钥（来自创建者）
-function 读分组密钥(码) { return localStorage.getItem(APIKEY_KEY(码))||''; }
-function 存分组密钥(码,k) { localStorage.setItem(APIKEY_KEY(码),k); }
-
-// ══ 邀请码编解码 ══
-// 邀请码 = base64(JSON{码, binId, apiKey})
-// 这样加入者直接拿到 binId 和 apiKey，不需要搜索
-function 生成邀请码(码, binId, apiKey) {
-  const obj = {c:码, b:binId, k:apiKey};
-  return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
-}
-function 解析邀请码(邀请码字符串) {
-  try {
-    const s = 邀请码字符串.trim().replace(/\s/g,'');
-    const obj = JSON.parse(decodeURIComponent(escape(atob(s))));
-    if(obj.c && obj.b && obj.k) return obj;
-    return null;
-  } catch(e){ return null; }
+  if (!ts) return '';
+  const d = Date.now() - ts;
+  if (d < 60000) return '刚刚';
+  if (d < 3600000) return Math.floor(d/60000) + '分钟前';
+  if (d < 86400000) return Math.floor(d/3600000) + '小时前';
+  return Math.floor(d/86400000) + '天前';
 }
 
 // ══ 渲染首页 ══
 function 渲染首页() {
   const l = 读分组列表();
   const 容器 = document.getElementById('分组列表区');
-  if(!l.length){
-    容器.innerHTML=`<div class="空状态"><div class="空状态图标">📋</div><div class="空状态文字">还没有加入任何分组<br>点下方按钮新建或加入</div></div>`;
+  if (!l.length) {
+    容器.innerHTML = `<div class="空状态"><div class="空状态图标">📋</div><div class="空状态文字">还没有加入任何分组<br>点下方按钮新建或加入</div></div>`;
     return;
   }
-  容器.innerHTML=`<div class="分组列表">${l.map(g=>{
-    const 有密钥 = !!读分组密钥(g.码);
-    const 标记 = 有密钥
-      ? `<span class="同步标记">云同步</span>`
-      : `<span class="仅本地标记">仅本机</span>`;
-    return `<div class="分组卡片" onclick="进入分组('${g.码}','${esc(g.名称)}')">
+  容器.innerHTML = `<div class="分组列表">${l.map(g => `
+    <div class="分组卡片" onclick="进入分组('${g.码}','${esc(g.名称)}')">
       <div class="分组图标">⚡</div>
       <div class="分组信息">
         <div class="分组名称">${g.名称}</div>
-        <div class="分组码行"><span class="码显示">${g.码}</span>${标记}<span class="最后使用">${格式化时间(g.时间)}</span></div>
+        <div class="分组码行">
+          <span class="码显示">${g.码}</span>
+          <span class="最后使用">${格式化时间(g.时间)}</span>
+        </div>
       </div>
       <div class="卡片右侧">
         <span class="进入箭头">›</span>
         <button class="btn 删除分组btn" onclick="event.stopPropagation();确认删除('${g.码}','${esc(g.名称)}')">删除</button>
       </div>
-    </div>`;
-  }).join('')}</div>`;
+    </div>`).join('')}</div>`;
 }
-function 确认删除(码,名称){
-  if(confirm(`删除分组「${名称}」？\n仅删除本机记录，不影响他人。`)){删除分组记录(码);渲染首页();}
+
+function 确认删除(码, 名称) {
+  if (confirm(`删除分组「${名称}」？\n仅删除本机记录，不影响他人。`)) {
+    删除分组记录(码); 渲染首页();
+  }
 }
 
 // ══ 弹层 ══
-function 关闭弹层(){ document.getElementById('弹层遮罩').classList.add('隐藏'); }
-function 显示弹层(html){ document.getElementById('弹层内容').innerHTML=html; document.getElementById('弹层遮罩').classList.remove('隐藏'); }
+function 关闭弹层() { document.getElementById('弹层遮罩').classList.add('隐藏'); }
+function 显示弹层(html) {
+  document.getElementById('弹层内容').innerHTML = html;
+  document.getElementById('弹层遮罩').classList.remove('隐藏');
+}
 
-// —— 加入分组弹层 ——
+// —— 加入弹层 ——
 function 打开加入弹层() {
   显示弹层(`
     <div class="弹层标题">加入分组</div>
-    <div class="弹层说明">粘贴同事发给你的<b>邀请码</b><br>邀请码由创建者在"邀请同事"里生成</div>
-    <label class="输入标签">邀请码</label>
-    <textarea class="文字输入" id="邀请码框" rows="3" placeholder="粘贴邀请码到这里…" style="resize:none;"></textarea>
-    <div class="输入提示">邀请码是一串字母和数字，由同事复制发给你</div>
+    <div class="弹层说明">输入同事给你的 6 位共享码</div>
+    <input class="码输入框" id="码框" type="text" maxlength="6" inputmode="numeric"
+      placeholder="— — — — — —"
+      oninput="this.value=this.value.replace(/\\D/g,'')"
+      onkeydown="if(event.key==='Enter')点加入()">
+    <div class="码提示">向同事索取 6 位数字</div>
     <button class="btn 弹层主btn" id="加入btn" onclick="点加入()">加入</button>
     <button class="btn 弹层次btn" onclick="关闭弹层()">取消</button>`);
-  setTimeout(()=>document.getElementById('邀请码框')?.focus(),100);
+  setTimeout(() => document.getElementById('码框')?.focus(), 100);
 }
 
 async function 点加入() {
-  const 输入 = document.getElementById('邀请码框')?.value.trim();
-  if(!输入){提示('请粘贴邀请码','错误');return;}
-  const 信息 = 解析邀请码(输入);
-  if(!信息){提示('邀请码格式不正确，请重新复制','错误');return;}
+  const 码 = document.getElementById('码框')?.value.trim();
+  if (!码 || 码.length !== 6 || !/^\d{6}$/.test(码)) { 提示('请输入 6 位数字', '错误'); return; }
   const btn = document.getElementById('加入btn');
-  if(btn){btn.disabled=true;btn.textContent='连接中…';}
-  存分组密钥(信息.c, 信息.k);
-  存BinId(信息.c, 信息.b);
+  if (btn) { btn.disabled = true; btn.textContent = '连接中…'; }
   关闭弹层();
-  await 进入应用(信息.c, false, '分组 '+信息.c);
+  await 进入应用(码, false, '分组 ' + 码);
 }
 
-// —— 新建分组弹层 ——
-function 打开新建弹层() {
-  显示弹层(`
-    <div class="弹层标题">新建分组</div>
-    <div class="弹层说明">需要填入你的 jsonbin.io 密钥，才能让所有人同步公式。<br>如果还没有密钥，按下方步骤操作。</div>
-    <div class="提示块">
-      <div class="提示块文字">
-        📌 获取密钥：打开 <b>jsonbin.io</b> → 注册账号 → 点右上角头像 → <b>API Keys</b> → 复制 <b>X-Master-Key</b>
-      </div>
-    </div>
-    <label class="输入标签">粘贴你的密钥</label>
-    <input class="文字输入" id="密钥框" type="text" placeholder="$2a$ 或 $2b$ 开头…" autocomplete="off">
-    <div class="输入提示">密钥只存在你的手机上，用于创建共享数据</div>
-    <button class="btn 弹层主btn" id="新建btn" onclick="点新建()">新建分组</button>
-    <button class="btn 弹层次btn" onclick="关闭弹层()">取消</button>`);
-  setTimeout(()=>document.getElementById('密钥框')?.focus(),100);
-}
-
+// —— 新建 ——
 async function 点新建() {
-  const apiKey = document.getElementById('密钥框')?.value.trim();
-  if(!apiKey||(!apiKey.startsWith('$2a$')&&!apiKey.startsWith('$2b$'))){
-    提示('请填入正确的密钥（$2a$ 或 $2b$ 开头）','错误');return;
-  }
-  const btn = document.getElementById('新建btn');
-  if(btn){btn.disabled=true;btn.textContent='创建中…';}
-  const 码 = String(Math.floor(100000+Math.random()*900000));
-  存分组密钥(码, apiKey);
+  const 码 = String(Math.floor(100000 + Math.random() * 900000));
   await 进入应用(码, true, '我的分组');
-  // 创建成功后展示邀请码
-  const binId = 读BinId(码);
-  if(binId){
-    const 邀请码 = 生成邀请码(码, binId, apiKey);
-    显示弹层(`
-      <div class="弹层标题">新建成功！</div>
-      <div class="弹层说明">把下面的<b>邀请码</b>发给同事，他们粘贴后即可加入并同步公式。</div>
-      <div class="邀请码展示">
-        <div class="邀请码标签">邀请码（长按复制）</div>
-        <div class="邀请码文字" id="邀请码文字">${邀请码}</div>
-        <div class="邀请码说明">共享码：${码}<br>发给同事后，对方选择"加入分组"粘贴即可</div>
-        <button class="btn 复制btn" onclick="复制邀请码('${邀请码}')">复制邀请码</button>
-      </div>
-      <button class="btn 弹层主btn" onclick="关闭弹层()">知道了，开始使用</button>`);
-    document.getElementById('弹层遮罩').classList.remove('隐藏');
-  } else {
-    提示('创建成功（离线模式）','普通');
-    关闭弹层();
-  }
-}
-
-function 复制邀请码(码){
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(码).then(()=>提示('邀请码已复制','成功')).catch(()=>提示('请长按邀请码手动复制','普通'));
-  } else {
-    // 降级方案
-    const el=document.getElementById('邀请码文字');
-    const range=document.createRange();range.selectNode(el);
-    window.getSelection().removeAllRanges();window.getSelection().addRange(range);
-    提示('已选中，请手动复制','普通');
-  }
-}
-
-// ══ 邀请同事（在分组内） ══
-function 显示邀请码() {
-  const binId = 读BinId(当前码);
-  const apiKey = 读分组密钥(当前码);
-  if(!binId||!apiKey){提示('该分组未开启云同步，无法生成邀请码','错误');return;}
-  const 邀请码 = 生成邀请码(当前码, binId, apiKey);
+  // 展示共享码
   显示弹层(`
-    <div class="弹层标题">邀请同事</div>
-    <div class="弹层说明">把邀请码发给同事，他们加入后公式会自动同步。</div>
-    <div class="邀请码展示">
-      <div class="邀请码标签">邀请码（长按复制）</div>
-      <div class="邀请码文字" id="邀请码文字">${邀请码}</div>
-      <div class="邀请码说明">共享码：${当前码}</div>
-      <button class="btn 复制btn" onclick="复制邀请码('${邀请码}')">复制邀请码</button>
+    <div class="弹层标题">新建成功！</div>
+    <div class="弹层说明">把共享码发给同事，对方输入后公式自动同步</div>
+    <div class="新建码展示">
+      <div class="新建码标签">共享码</div>
+      <div class="新建码数字">${码}</div>
+      <div class="新建码说明">把这 6 位数字告诉同事即可</div>
     </div>
-    <button class="btn 弹层主btn" onclick="关闭弹层()">关闭</button>`);
+    <button class="btn 弹层主btn" onclick="关闭弹层()">知道了，开始使用</button>`);
 }
 
 // ══ 应用状态 ══
-let 当前码='', 编辑中=false, 数据=[], 编号计数=1, 同步定时器=null;
+let 当前码 = '', 编辑中 = false, 数据 = [], 编号计数 = 1, 同步定时器 = null;
 
-const 默认数据=()=>[
+const 默认数据 = () => [
   {id:1,名称:'本月用电量',公式:'本期示数 - 上期示数',变量:[{名:'本期示数（度）',符:'本期示数',值:''},{名:'上期示数（度）',符:'上期示数',值:''}],单位:'度'},
   {id:2,名称:'本月电费',公式:'用电量 * 电价',变量:[{名:'用电量（度）',符:'用电量',值:''},{名:'电价（元/度）',符:'电价',值:'0.6'}],单位:'元'},
   {id:3,名称:'多户分摊',公式:'总电费 / 户数',变量:[{名:'总电费（元）',符:'总电费',值:''},{名:'户数',符:'户数',值:''}],单位:'元/户'},
@@ -372,166 +379,208 @@ async function 进入分组(码, 名称) {
 }
 
 async function 进入应用(码, 是新建, 名称) {
-  当前码=码; 编辑中=false;
-  document.getElementById('顶栏码').textContent=码;
-  document.getElementById('应用标题').textContent=名称||'电表计算器';
+  当前码 = 码; 编辑中 = false;
+  document.getElementById('顶栏码').textContent = 码;
+  document.getElementById('应用标题').textContent = 名称 || '电表计算器';
   document.getElementById('首页').classList.add('隐藏');
   document.getElementById('主应用').classList.remove('隐藏');
 
-  const 本地=读本地(码);
-  if(本地){数据=本地.列表;编号计数=本地.编号计数||数据.length+1;}
-  else{数据=默认数据();编号计数=数据.length+1;}
+  const 本地 = 读本地(码);
+  if (本地) { 数据 = 本地.列表; 编号计数 = 本地.编号计数 || 数据.length + 1; }
+  else { 数据 = 默认数据(); 编号计数 = 数据.length + 1; }
   渲染计算页();
   添加或更新分组(码, 名称);
 
   设徽章('同步中');
-  const ok=await 首次同步(码, 是新建);
-  设徽章(ok?'已同步':'离线');
-  if(!ok&&!本地&&!是新建) 提示('未能连接云端，使用默认公式','普通');
+  const ok = await 首次同步(码, 是新建);
+  设徽章(ok ? '已同步' : '离线');
+  if (!ok && !本地 && !是新建) 提示('未能连接云端，使用默认公式', '普通');
   开始定时同步();
 }
 
 function 返回首页() {
-  if(同步定时器){clearInterval(同步定时器);同步定时器=null;}
+  if (同步定时器) { clearInterval(同步定时器); 同步定时器 = null; }
   document.getElementById('主应用').classList.add('隐藏');
   document.getElementById('首页').classList.remove('隐藏');
   渲染首页();
 }
 
 // ══ 本地存储 ══
-function 读本地(码){try{const s=localStorage.getItem(DATA_KEY(码));return s?JSON.parse(s):null;}catch(e){return null;}}
-function 存本地(码,p){try{localStorage.setItem(DATA_KEY(码),JSON.stringify(p));}catch(e){}}
-function 读BinId(码){return localStorage.getItem(BIN_KEY(码))||null;}
-function 存BinId(码,id){localStorage.setItem(BIN_KEY(码),id);}
+function 读本地(码) { try{const s=localStorage.getItem(DATA_KEY(码));return s?JSON.parse(s):null;}catch(e){return null;} }
+function 存本地(码,p) { try{localStorage.setItem(DATA_KEY(码),JSON.stringify(p));}catch(e){} }
+function 读BinId(码) { return localStorage.getItem(BIN_KEY(码))||null; }
+function 存BinId(码,id) { localStorage.setItem(BIN_KEY(码),id); }
 
-// ══ 云同步（每个分组用自己的密钥） ══
-async function 创建云端(码,p){
-  const k=读分组密钥(码);if(!k)return null;
-  try{const r=await fetch('https://api.jsonbin.io/v3/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':k,'X-Bin-Name':'meter_'+码,'X-Bin-Private':'false'},body:JSON.stringify(p)});
-  if(!r.ok)return null;const d=await r.json();return d.metadata?.id||null;}catch(e){return null;}
+// ══ 云同步（所有人同一密钥） ══
+async function 创建云端(码, p) {
+  const k = 获取密钥(); if (!k || k==='__offline__') return null;
+  try {
+    const r = await fetch('https://api.jsonbin.io/v3/b', {method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':k,'X-Bin-Name':'meter_'+码,'X-Bin-Private':'false'},body:JSON.stringify(p)});
+    if (!r.ok) return null;
+    const d = await r.json(); return d.metadata?.id || null;
+  } catch(e) { return null; }
 }
-async function 读取云端(码, id){
-  const k=读分组密钥(码);if(!k||!id)return null;
-  try{const r=await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`,{headers:{'X-Master-Key':k,'X-Bin-Private':'false'}});
-  if(!r.ok)return null;const d=await r.json();return d.record||null;}catch(e){return null;}
+async function 读取云端(id) {
+  const k = 获取密钥(); if (!k || k==='__offline__' || !id) return null;
+  try {
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`, {headers:{'X-Master-Key':k}});
+    if (!r.ok) return null;
+    const d = await r.json(); return d.record || null;
+  } catch(e) { return null; }
 }
-async function 更新云端(码, id, p){
-  const k=读分组密钥(码);if(!k||!id)return false;
-  try{const r=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':k},body:JSON.stringify(p)});return r.ok;}catch(e){return false;}
+async function 更新云端(id, p) {
+  const k = 获取密钥(); if (!k || k==='__offline__' || !id) return false;
+  try {
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${id}`, {method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':k},body:JSON.stringify(p)});
+    return r.ok;
+  } catch(e) { return false; }
 }
 
-async function 首次同步(码, 是新建){
-  const k=读分组密钥(码);if(!k)return false;
-  let id=读BinId(码);
-  if(id){
-    if(!是新建){
-      const 云=await 读取云端(码,id);
-      if(云&&云.时间戳>(读本地(码)?.时间戳||0)){
-        数据=云.列表;编号计数=云.编号计数||数据.length+1;
-        存本地(码,{列表:数据,编号计数,时间戳:云.时间戳});渲染计算页();
+async function 搜索云端bin(码) {
+  const k = 获取密钥(); if (!k || k==='__offline__') return null;
+  try {
+    const r = await fetch('https://api.jsonbin.io/v3/b?q=meter_'+码, {headers:{'X-Master-Key':k}});
+    if (!r.ok) return null;
+    const l = await r.json();
+    return (l.length > 0) ? (l[0]._id || null) : null;
+  } catch(e) { return null; }
+}
+
+async function 首次同步(码, 是新建) {
+  if (!有密钥() || 获取密钥()==='__offline__') return false;
+  let id = 读BinId(码);
+  if (!id) id = await 搜索云端bin(码);
+  if (id) {
+    存BinId(码, id);
+    if (!是新建) {
+      const 云 = await 读取云端(id);
+      if (云 && 云.时间戳 > (读本地(码)?.时间戳||0)) {
+        数据 = 云.列表; 编号计数 = 云.编号计数 || 数据.length + 1;
+        存本地(码, {列表:数据, 编号计数, 时间戳:云.时间戳});
+        渲染计算页();
       }
-    } else { await 推送云端(); }
+    } else {
+      await 推送云端();
+    }
     return true;
-  } else if(是新建){
-    const p={列表:数据,编号计数,时间戳:Date.now()};
-    const nid=await 创建云端(码,p);
-    if(nid){存BinId(码,nid);存本地(码,p);return true;}
+  } else if (是新建) {
+    const p = {列表:数据, 编号计数, 时间戳:Date.now()};
+    const nid = await 创建云端(码, p);
+    if (nid) { 存BinId(码, nid); 存本地(码, p); return true; }
   }
   return false;
 }
 
-function 开始定时同步(){
-  if(同步定时器)clearInterval(同步定时器);
-  同步定时器=setInterval(async()=>{
-    const id=读BinId(当前码);if(!id){设徽章('离线');return;}
-    const 云=await 读取云端(当前码,id);if(!云){设徽章('离线');return;}
-    const 本地=读本地(当前码);
-    if(云.时间戳>(本地?.时间戳||0)){
-      数据=云.列表;编号计数=云.编号计数||数据.length+1;
-      存本地(当前码,{列表:数据,编号计数,时间戳:云.时间戳});渲染计算页();
-      提示('公式已更新','成功');
+function 开始定时同步() {
+  if (同步定时器) clearInterval(同步定时器);
+  同步定时器 = setInterval(async () => {
+    const id = 读BinId(当前码); if (!id) { 设徽章('离线'); return; }
+    const 云 = await 读取云端(id); if (!云) { 设徽章('离线'); return; }
+    const 本地 = 读本地(当前码);
+    if (云.时间戳 > (本地?.时间戳||0)) {
+      数据 = 云.列表; 编号计数 = 云.编号计数 || 数据.length + 1;
+      存本地(当前码, {列表:数据, 编号计数, 时间戳:云.时间戳});
+      渲染计算页();
+      提示('公式已更新', '成功');
     }
     设徽章('已同步');
-  },15000);
+  }, 15000);
 }
 
-async function 推送云端(){
-  const id=读BinId(当前码);const ts=Date.now();
-  const p={列表:数据,编号计数,时间戳:ts};
-  存本地(当前码,p);if(!id)return;
+async function 推送云端() {
+  const id = 读BinId(当前码); const ts = Date.now();
+  const p = {列表:数据, 编号计数, 时间戳:ts};
+  存本地(当前码, p); if (!id) return;
   设徽章('同步中');
-  const ok=await 更新云端(当前码,id,p);
-  设徽章(ok?'已同步':'离线');
-  if(ok)提示('已同步到所有成员','成功');
+  const ok = await 更新云端(id, p);
+  设徽章(ok ? '已同步' : '离线');
 }
 
 // ══ 计算 ══
-function 计算(公式,变量列表){
-  try{let s={},空=false;变量列表.forEach(v=>{if(v.值==='')空=true;s[v.符]=parseFloat(v.值)||0;});
-  if(空)return{ok:false,empty:true};const r=math.evaluate(公式,s);
-  if(typeof r==='number'&&isFinite(r))return{ok:true,值:Math.round(r*10000)/10000};return{ok:false};}
-  catch(e){return{ok:false};}
+function 计算(公式, 变量列表) {
+  try {
+    let s={}, 空=false;
+    变量列表.forEach(v => { if(v.值==='') 空=true; s[v.符]=parseFloat(v.值)||0; });
+    if(空) return {ok:false,empty:true};
+    const r = math.evaluate(公式, s);
+    if(typeof r==='number'&&isFinite(r)) return {ok:true,值:Math.round(r*10000)/10000};
+    return {ok:false};
+  } catch(e) { return {ok:false}; }
 }
 
 // ══ 渲染计算页 ══
-function 渲染计算页(){
-  const 容器=document.getElementById('内容区');容器.innerHTML='';
-  数据.forEach(w=>{
-    const res=计算(w.公式,w.变量);const el=document.createElement('div');
-    el.className='卡片'+(编辑中?' 编辑态':'');
-    const 头=编辑中?`<input class="卡片标题输入" value="${esc(w.名称)}" onchange="改名(${w.id},this.value)"><button class="btn 删除卡片btn" onclick="删卡片(${w.id})">删除</button>`:`<span class="卡片标题">${w.名称}</span>`;
-    const 公式区=编辑中?`<div style="margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid #EAEAE6"><div class="公式行" style="margin:0;padding:0;border:0"><span class="小标签">公式</span><input class="公式输入" value="${esc(w.公式)}" oninput="改公式(${w.id},this.value)"></div><div class="公式提示">变量名须与下方一致，支持 + − * /</div></div>`:`<div class="公式行"><span class="小标签">公式</span><span class="公式展示">${w.公式}</span></div>`;
-    const 变量们=w.变量.map((v,i)=>编辑中?`<div class="变量行"><input class="变量名输入" value="${esc(v.名)}" onchange="改变量名(${w.id},${i},this.value)"><input class="数值输入" type="number" inputmode="decimal" value="${v.值}" placeholder="——" oninput="改数值(${w.id},${i},this.value)">${w.变量.length>1?`<button class="btn 删除变量btn" onclick="删变量(${w.id},${i})">删除</button>`:''}</div>`:`<div class="变量行"><span class="变量名称">${v.名}</span><input class="数值输入" type="number" inputmode="decimal" value="${v.值}" placeholder="请输入" oninput="改数值(${w.id},${i},this.value)"></div>`).join('');
-    const 单位=编辑中?`<input class="结果单位输入" value="${esc(w.单位)}" placeholder="单位" onchange="改单位(${w.id},this.value)">`:`<span class="结果单位">${w.单位}</span>`;
+function 渲染计算页() {
+  const 容器 = document.getElementById('内容区'); 容器.innerHTML = '';
+  数据.forEach(w => {
+    const res = 计算(w.公式, w.变量); const el = document.createElement('div');
+    el.className = '卡片' + (编辑中 ? ' 编辑态' : '');
+    const 头 = 编辑中
+      ? `<input class="卡片标题输入" value="${esc(w.名称)}" onchange="改名(${w.id},this.value)"><button class="btn 删除卡片btn" onclick="删卡片(${w.id})">删除</button>`
+      : `<span class="卡片标题">${w.名称}</span>`;
+    const 公式区 = 编辑中
+      ? `<div style="margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid #EAEAE6"><div class="公式行" style="margin:0;padding:0;border:0"><span class="小标签">公式</span><input class="公式输入" value="${esc(w.公式)}" oninput="改公式(${w.id},this.value)"></div><div class="公式提示">变量名须与下方一致，支持 + − * /</div></div>`
+      : `<div class="公式行"><span class="小标签">公式</span><span class="公式展示">${w.公式}</span></div>`;
+    const 变量们 = w.变量.map((v,i) => 编辑中
+      ? `<div class="变量行"><input class="变量名输入" value="${esc(v.名)}" onchange="改变量名(${w.id},${i},this.value)"><input class="数值输入" type="number" inputmode="decimal" value="${v.值}" placeholder="——" oninput="改数值(${w.id},${i},this.value)">${w.变量.length>1?`<button class="btn 删除变量btn" onclick="删变量(${w.id},${i})">删除</button>`:''}</div>`
+      : `<div class="变量行"><span class="变量名称">${v.名}</span><input class="数值输入" type="number" inputmode="decimal" value="${v.值}" placeholder="请输入" oninput="改数值(${w.id},${i},this.value)"></div>`
+    ).join('');
+    const 单位 = 编辑中
+      ? `<input class="结果单位输入" value="${esc(w.单位)}" placeholder="单位" onchange="改单位(${w.id},this.value)">`
+      : `<span class="结果单位">${w.单位}</span>`;
     let 结果HTML;
-    if(res.ok)结果HTML=`<div class="结果区"><span class="结果标签">结果</span><span class="结果数值">${res.值}</span>${单位}</div>`;
-    else if(res.empty)结果HTML=`<div class="结果区"><span class="结果标签">结果</span><span class="结果空">——</span>${单位}</div>`;
-    else结果HTML=`<div class="错误区">公式有误，请在编辑模式下检查</div>`;
-    el.innerHTML=`<div class="卡片头">${头}</div><div class="卡片体">${公式区}<div class="变量列表">${变量们}</div>${编辑中?`<button class="btn 新增变量btn" onclick="加变量(${w.id})">＋ 新增一行变量</button>`:''} ${结果HTML}</div>`;
+    if(res.ok)          结果HTML=`<div class="结果区"><span class="结果标签">结果</span><span class="结果数值">${res.值}</span>${单位}</div>`;
+    else if(res.empty)  结果HTML=`<div class="结果区"><span class="结果标签">结果</span><span class="结果空">——</span>${单位}</div>`;
+    else                结果HTML=`<div class="错误区">公式有误，请在编辑模式下检查</div>`;
+    el.innerHTML = `<div class="卡片头">${头}</div><div class="卡片体">${公式区}<div class="变量列表">${变量们}</div>${编辑中?`<button class="btn 新增变量btn" onclick="加变量(${w.id})">＋ 新增一行变量</button>`:''} ${结果HTML}</div>`;
     容器.appendChild(el);
   });
-  if(编辑中){
-    // 邀请按钮
-    const inv=document.createElement('button');inv.className='btn 新增项目btn';
-    inv.style.cssText='border-color:#A7F3D0;color:#065F46;';
-    inv.textContent='📤 邀请同事加入此分组';inv.onclick=显示邀请码;
-    容器.appendChild(inv);
-    const b=document.createElement('button');b.className='btn 新增项目btn';b.textContent='＋ 新增计算项目';b.onclick=加卡片;
+  if (编辑中) {
+    const b = document.createElement('button'); b.className='btn 新增项目btn'; b.textContent='＋ 新增计算项目'; b.onclick=加卡片;
     容器.appendChild(b);
   }
-  const eb=document.getElementById('编辑btn');eb.textContent=编辑中?'完成':'编辑';eb.className='btn 编辑按钮'+(编辑中?' 激活':'');
+  const eb = document.getElementById('编辑btn');
+  eb.textContent = 编辑中 ? '完成' : '编辑';
+  eb.className = 'btn 编辑按钮' + (编辑中 ? ' 激活' : '');
 }
-function esc(s){return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+function esc(s) { return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
 // ══ 编辑操作 ══
-function 切换编辑(){编辑中=!编辑中;if(!编辑中)推送云端();渲染计算页();}
-function 改名(id,v){
-  const w=数据.find(w=>w.id===id);w.名称=v;
-  const l=读分组列表();const g=l.find(g=>g.码===当前码);
+function 切换编辑() { 编辑中=!编辑中; if(!编辑中) 推送云端(); 渲染计算页(); }
+function 改名(id,v) {
+  数据.find(w=>w.id===id).名称=v;
+  const l=读分组列表(); const g=l.find(g=>g.码===当前码);
   if(g){g.名称=v;存分组列表(l);}
   document.getElementById('应用标题').textContent=v;
 }
-function 改公式(id,v){数据.find(w=>w.id===id).公式=v;渲染计算页();}
-function 改数值(id,i,v){数据.find(w=>w.id===id).变量[i].值=v;渲染计算页();}
-function 改变量名(id,i,v){const w=数据.find(w=>w.id===id);const 旧=w.变量[i].符;const 新=v.replace(/[（）()\s]/g,'').substring(0,8)||('变量'+(i+1));w.公式=w.公式.split(旧).join(新);w.变量[i].名=v;w.变量[i].符=新;渲染计算页();}
-function 改单位(id,v){数据.find(w=>w.id===id).单位=v;}
-function 加变量(id){const w=数据.find(w=>w.id===id);const n='变量'+(w.变量.length+1);w.变量.push({名:n,符:n,值:''});渲染计算页();}
-function 删变量(id,i){数据.find(w=>w.id===id).变量.splice(i,1);渲染计算页();}
-function 删卡片(id){if(数据.length<=1){提示('至少保留一个计算项目','错误');return;}if(!confirm('确认删除此项目？'))return;数据=数据.filter(w=>w.id!==id);渲染计算页();}
-function 加卡片(){数据.push({id:编号计数++,名称:'新计算项目',公式:'变量1 + 变量2',变量:[{名:'变量1',符:'变量1',值:''},{名:'变量2',符:'变量2',值:''}],单位:''});渲染计算页();}
+function 改公式(id,v) { 数据.find(w=>w.id===id).公式=v; 渲染计算页(); }
+function 改数值(id,i,v) { 数据.find(w=>w.id===id).变量[i].值=v; 渲染计算页(); }
+function 改变量名(id,i,v) {
+  const w=数据.find(w=>w.id===id); const 旧=w.变量[i].符;
+  const 新=v.replace(/[（）()\s]/g,'').substring(0,8)||('变量'+(i+1));
+  w.公式=w.公式.split(旧).join(新); w.变量[i].名=v; w.变量[i].符=新; 渲染计算页();
+}
+function 改单位(id,v) { 数据.find(w=>w.id===id).单位=v; }
+function 加变量(id) { const w=数据.find(w=>w.id===id); const n='变量'+(w.变量.length+1); w.变量.push({名:n,符:n,值:''}); 渲染计算页(); }
+function 删变量(id,i) { 数据.find(w=>w.id===id).变量.splice(i,1); 渲染计算页(); }
+function 删卡片(id) { if(数据.length<=1){提示('至少保留一个计算项目','错误');return;} if(!confirm('确认删除？'))return; 数据=数据.filter(w=>w.id!==id); 渲染计算页(); }
+function 加卡片() { 数据.push({id:编号计数++,名称:'新计算项目',公式:'变量1 + 变量2',变量:[{名:'变量1',符:'变量1',值:''},{名:'变量2',符:'变量2',值:''}],单位:''}); 渲染计算页(); }
 
 // ══ 工具 ══
-function 设徽章(s){const el=document.getElementById('同步徽章');el.className='同步徽章';
+function 设徽章(s) {
+  const el=document.getElementById('同步徽章'); el.className='同步徽章';
   if(s==='同步中'){el.classList.add('徽章同步中');el.textContent='同步中…';}
   else if(s==='已同步'){el.classList.add('徽章已同步');el.textContent='已同步';}
-  else{el.classList.add('徽章离线');el.textContent='离线';}}
+  else{el.classList.add('徽章离线');el.textContent='离线';}
+}
 let 提示t=null;
-function 提示(文字,类型='普通'){const el=document.getElementById('提示条');el.textContent=文字;
+function 提示(文字,类型='普通') {
+  const el=document.getElementById('提示条'); el.textContent=文字;
   el.className='提示条 显示 '+(类型==='成功'?'提示成功':类型==='错误'?'提示错误':'提示普通');
-  if(提示t)clearTimeout(提示t);提示t=setTimeout(()=>el.classList.remove('显示'),2800);}
+  if(提示t)clearTimeout(提示t); 提示t=setTimeout(()=>el.classList.remove('显示'),2800);
+}
 
 // ══ 启动 ══
-渲染首页();
+启动();
 </script>
 </body>
 </html>
