@@ -13,98 +13,94 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;color:#1a1a1a;overflow-x:hidden;}
-.page{display:none;} .page.active{display:block;}
-.btn{font-family:inherit;cursor:pointer;border:none;outline:none;background:none;}
 
+/* ══ 页面切换：全屏滑动 ══ */
+#pages{position:fixed;inset:0;overflow:hidden;}
+.page{
+  position:absolute;inset:0;
+  background:#F5F5F0;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+/* 首页默认在屏幕上 */
+#homePage{transform:translateX(0);}
+/* 主应用默认在右边屏幕外 */
+#appPage{transform:translateX(100%);}
+/* 进入主应用时：首页左移，主应用归位 */
+#homePage.slide-left{transform:translateX(-30%);}
+#appPage.slide-in{transform:translateX(0);}
+
+/* 提示条 */
 #toast{position:fixed;top:0;left:0;right:0;z-index:9999;padding:13px 16px;font-size:16px;font-weight:500;text-align:center;transform:translateY(-100%);transition:transform .3s;}
 #toast.show{transform:translateY(0);}
 .t-success{background:#1D9E75;color:#fff;}
 .t-error{background:#CC3333;color:#fff;}
 .t-info{background:#333;color:#fff;}
 
-/* ══ 初始化页 ══ */
-#initPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
-.init-card{width:100%;max-width:380px;background:#fff;border-radius:22px;padding:36px 28px;box-shadow:0 4px 28px rgba(0,0,0,.10);}
-.init-icon{font-size:52px;text-align:center;margin-bottom:16px;}
-.init-card h1{font-size:24px;font-weight:700;text-align:center;margin-bottom:10px;}
-.init-card p{font-size:16px;color:#555;text-align:center;line-height:1.7;margin-bottom:28px;}
-.big-btn{width:100%;font-size:20px;font-weight:600;padding:18px;border-radius:14px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;margin-bottom:12px;}
-.big-btn:active{opacity:.85;}
-.big-btn:disabled{background:#bbb;cursor:not-allowed;}
-.green-box{background:#F0FAF6;border:2px solid #A7F3D0;border-radius:16px;padding:22px;margin-bottom:22px;}
-.green-box .gl{font-size:15px;color:#065F46;font-weight:500;margin-bottom:10px;text-align:center;}
-.green-box .gv{font-size:13px;font-weight:700;color:#065F46;word-break:break-all;text-align:center;line-height:1.7;font-family:'Courier New',monospace;user-select:all;}
-.green-box .gn{font-size:14px;color:#0F6E56;margin-top:10px;text-align:center;line-height:1.6;}
-.copy-btn{width:100%;font-size:18px;font-weight:500;padding:15px;border-radius:13px;background:#1D9E75;color:#fff;border:none;cursor:pointer;font-family:inherit;margin-bottom:16px;}
-.yellow-box{background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:13px;padding:18px;font-size:15px;color:#78350F;line-height:1.9;margin-bottom:20px;}
-.yellow-box b{color:#1a1a1a;}
-
-/* ══ 首页 ══ */
-#homePage{min-height:100vh;display:flex;flex-direction:column;padding-bottom:48px;}
-.home-top{padding:28px 20px 8px;}
-.home-top h1{font-size:28px;font-weight:700;}
-.home-top span{display:block;font-size:16px;font-weight:400;color:#888;margin-top:5px;}
-.home-body{flex:1;padding:14px 16px 0;}
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;}
-.empty .ei{font-size:48px;margin-bottom:14px;}
-.empty p{font-size:17px;color:#888;line-height:1.7;}
-.group-list{display:flex;flex-direction:column;gap:13px;margin-bottom:18px;}
-.gc{background:#fff;border-radius:17px;border:2px solid #EAEAE6;padding:16px 18px;display:flex;align-items:center;gap:13px;cursor:pointer;}
-.gc:active{border-color:#1D9E75;background:#F9FFFE;}
-.gc-icon{width:50px;height:50px;border-radius:13px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
-.gc-info{flex:1;min-width:0;}
-.gc-name{font-size:19px;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.gc-sub{display:flex;align-items:center;gap:8px;}
-.gc-code{font-size:15px;color:#888;font-weight:500;letter-spacing:2px;}
-.gc-time{font-size:13px;color:#bbb;}
-.gc-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0;}
-.gc-arrow{font-size:23px;color:#ccc;}
-.del-gc-btn{font-size:13px;font-weight:500;padding:5px 11px;border:1.5px solid #FECACA;border-radius:9px;background:#FEF2F2;color:#B91C1C;cursor:pointer;font-family:inherit;}
-.bottom-btns{padding:0 16px;display:flex;flex-direction:column;gap:11px;}
-.main-btn{width:100%;font-size:19px;font-weight:600;padding:17px;border-radius:15px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;}
-.main-btn:active{opacity:.85;}
-.sec-btn{width:100%;font-size:17px;font-weight:500;padding:15px;border-radius:15px;background:#fff;color:#1a1a1a;border:2px solid #E0E0DA;cursor:pointer;font-family:inherit;}
-.sec-btn:active{background:#F5F5F0;}
-
-/* ══ 弹层 ══ */
-#overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);display:none;align-items:flex-end;}
+/* 弹层 */
+#overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);display:none;align-items:flex-end;}
 #overlay.show{display:flex;}
-.sheet{width:100%;background:#fff;border-radius:24px 24px 0 0;padding:28px 22px 52px;}
+.sheet{width:100%;background:#fff;border-radius:24px 24px 0 0;padding:28px 22px 52px;max-height:90vh;overflow-y:auto;}
 .sheet h2{font-size:21px;font-weight:700;margin-bottom:7px;}
-.sheet .sh-desc{font-size:15px;color:#888;margin-bottom:22px;line-height:1.6;}
+.sh-desc{font-size:15px;color:#888;margin-bottom:22px;line-height:1.6;}
 .code-inp{width:100%;font-size:40px;font-weight:700;letter-spacing:9px;text-align:center;border:2px solid #E0E0DA;border-radius:13px;padding:17px 10px;outline:none;background:#FAFAF8;font-family:inherit;margin-bottom:7px;}
 .code-inp:focus{border-color:#1D9E75;}
 .code-hint{font-size:13px;color:#aaa;text-align:center;margin-bottom:22px;}
-.sh-main-btn{width:100%;font-size:19px;font-weight:600;padding:17px;border-radius:13px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;margin-bottom:11px;}
-.sh-main-btn:active{opacity:.85;}
-.sh-main-btn:disabled{background:#bbb;cursor:not-allowed;}
-.sh-sec-btn{width:100%;font-size:17px;font-weight:500;padding:14px;border-radius:13px;background:transparent;color:#888;border:2px solid #E8E8E4;cursor:pointer;font-family:inherit;}
-.sh-sec-btn:active{background:#F5F5F0;}
+.sh-main{width:100%;font-size:19px;font-weight:600;padding:17px;border-radius:13px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;margin-bottom:11px;}
+.sh-main:active{opacity:.85;}
+.sh-sec{width:100%;font-size:17px;font-weight:500;padding:14px;border-radius:13px;background:transparent;color:#888;border:2px solid #E8E8E4;cursor:pointer;font-family:inherit;}
+.sh-sec:active{background:#F5F5F0;}
 .new-code-box{background:#F0FAF6;border:2px solid #A7F3D0;border-radius:15px;padding:22px;text-align:center;margin-bottom:20px;}
 .nc-label{font-size:15px;color:#065F46;font-weight:500;margin-bottom:9px;}
 .nc-num{font-size:50px;font-weight:700;color:#065F46;letter-spacing:11px;}
 .nc-note{font-size:14px;color:#0F6E56;margin-top:9px;line-height:1.6;}
 
+/* ══ 首页 ══ */
+#homePage{padding-bottom:48px;}
+.home-top{padding:52px 20px 12px;}
+.home-top h1{font-size:30px;font-weight:700;}
+.home-top span{display:block;font-size:16px;font-weight:400;color:#888;margin-top:6px;}
+.home-body{padding:8px 16px 0;flex:1;}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;}
+.empty .ei{font-size:52px;margin-bottom:16px;}
+.empty p{font-size:17px;color:#888;line-height:1.7;}
+.group-list{display:flex;flex-direction:column;gap:13px;margin-bottom:18px;}
+.gc{background:#fff;border-radius:17px;border:2px solid #EAEAE6;padding:17px 18px;display:flex;align-items:center;gap:13px;cursor:pointer;}
+.gc:active{border-color:#1D9E75;background:#F9FFFE;}
+.gc-icon{width:52px;height:52px;border-radius:13px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.gc-info{flex:1;min-width:0;}
+.gc-name{font-size:19px;font-weight:600;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gc-sub{display:flex;align-items:center;gap:8px;}
+.gc-code{font-size:15px;color:#888;font-weight:500;letter-spacing:2px;}
+.gc-time{font-size:13px;color:#bbb;}
+.gc-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0;}
+.gc-arrow{font-size:24px;color:#ccc;}
+.del-gc-btn{font-size:13px;font-weight:500;padding:5px 11px;border:1.5px solid #FECACA;border-radius:9px;background:#FEF2F2;color:#B91C1C;cursor:pointer;font-family:inherit;}
+.bottom-btns{padding:16px 16px 0;display:flex;flex-direction:column;gap:11px;}
+.main-btn{width:100%;font-size:19px;font-weight:600;padding:17px;border-radius:15px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;}
+.main-btn:active{opacity:.85;}
+.sec-btn{width:100%;font-size:17px;font-weight:500;padding:15px;border-radius:15px;background:#fff;color:#1a1a1a;border:2px solid #E0E0DA;cursor:pointer;font-family:inherit;}
+.sec-btn:active{background:#F5F5F0;}
+
 /* ══ 主应用 ══ */
-#appPage{min-height:100vh;padding-bottom:48px;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 16px 13px;background:#fff;border-bottom:1px solid #EAEAE6;position:sticky;top:0;z-index:50;}
+#appPage{padding-bottom:48px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:52px 16px 13px;background:#fff;border-bottom:1px solid #EAEAE6;}
 .tl{display:flex;flex-direction:column;gap:4px;}
 .trow{display:flex;align-items:center;gap:9px;}
 .back-btn{font-size:15px;font-weight:500;padding:7px 13px;border-radius:10px;border:2px solid #E0E0DA;background:#fff;color:#555;cursor:pointer;font-family:inherit;white-space:nowrap;}
 .back-btn:active{background:#F5F5F0;}
-.app-title{font-size:19px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px;}
+.app-title{font-size:19px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
 .srow{display:flex;align-items:center;gap:7px;}
 .code-mark{font-size:13px;color:#555;font-weight:500;}
 .sync-badge{font-size:12px;font-weight:500;padding:2px 9px;border-radius:20px;}
 .b-syncing{background:#FFF8E1;color:#B45309;}
 .b-synced{background:#DCFCE7;color:#166534;}
 .b-offline{background:#F3F4F6;color:#6B7280;}
-.edit-btn{font-size:17px;font-weight:600;padding:10px 21px;border-radius:12px;border:2px solid #D0D0CC;background:#fff;color:#1a1a1a;font-family:inherit;cursor:pointer;}
+.edit-btn{font-size:17px;font-weight:600;padding:10px 21px;border-radius:12px;border:2px solid #D0D0CC;background:#fff;color:#1a1a1a;font-family:inherit;cursor:pointer;white-space:nowrap;}
 .edit-btn.on{background:#1D9E75;border-color:#1D9E75;color:#fff;}
 
 .content{padding:16px;display:flex;flex-direction:column;gap:16px;}
-
-/* 卡片 */
 .card{background:#fff;border-radius:17px;overflow:hidden;border:2px solid #EAEAE6;}
 .card.ed{border-color:#1D9E75;}
 .chead{display:flex;align-items:center;gap:11px;padding:14px 16px;background:#FAFAF8;border-bottom:1px solid #EAEAE6;}
@@ -112,16 +108,12 @@ html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC'
 .ctitle-inp{flex:1;font-size:19px;font-weight:700;background:#fff;border:2px solid #D0D0CC;border-radius:9px;padding:7px 10px;outline:none;font-family:inherit;color:#1a1a1a;}
 .del-card-btn{font-size:15px;font-weight:500;padding:8px 15px;border-radius:10px;border:2px solid #FECACA;background:#FEF2F2;color:#B91C1C;font-family:inherit;cursor:pointer;white-space:nowrap;}
 .cbody{padding:16px;}
-
-/* 公式行 */
 .frow{display:flex;align-items:center;gap:9px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #EAEAE6;}
 .flabel{font-size:15px;color:#888;white-space:nowrap;}
 .fdisplay{flex:1;font-size:14px;color:#555;font-family:'Courier New',monospace;background:#F5F5F0;padding:9px 12px;border-radius:10px;word-break:break-all;min-width:0;}
 .finput{flex:1;font-size:15px;font-family:'Courier New',monospace;color:#1a1a1a;background:#fff;border:2px solid #D0D0CC;border-radius:10px;padding:9px 11px;outline:none;min-width:0;}
 .finput:focus{border-color:#1D9E75;}
 .fhint{font-size:12px;color:#aaa;margin-top:6px;line-height:1.7;}
-
-/* 变量行 */
 .vlist{display:flex;flex-direction:column;gap:12px;margin-bottom:14px;}
 .vrow{display:flex;align-items:center;gap:9px;}
 .sym{width:27px;height:27px;border-radius:7px;background:#1a1a1a;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -133,8 +125,6 @@ html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC'
 .del-var-btn{font-size:13px;padding:8px 11px;border-radius:9px;border:2px solid #FECACA;background:#FEF2F2;color:#B91C1C;font-family:inherit;cursor:pointer;flex-shrink:0;}
 .add-var-btn{width:100%;font-size:16px;padding:13px;border:2px dashed #D0D0CC;border-radius:12px;background:transparent;color:#888;font-family:inherit;cursor:pointer;margin-bottom:14px;}
 .add-var-btn:active{background:#F5F5F0;}
-
-/* 结果 */
 .rbox{display:flex;align-items:center;gap:11px;padding:15px 17px;border-radius:14px;background:#F0FAF6;border:2px solid #A7F3D0;}
 .rlabel{font-size:17px;color:#065F46;font-weight:600;white-space:nowrap;}
 .rval{flex:1;font-size:38px;font-weight:700;color:#065F46;text-align:right;}
@@ -147,189 +137,112 @@ html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC'
 </style>
 </head>
 <body>
+
 <div id="toast"></div>
-
-<!-- 初始化页 -->
-<div id="initPage" class="page">
-  <div class="init-card">
-    <div class="init-icon">⚡</div>
-    <h1 id="initTitle">首次初始化</h1>
-    <p id="initDesc">点击下方按钮，在云端创建共享存储空间。只需做一次。</p>
-    <div id="initIdArea" class="隐藏" style="display:none">
-      <div class="green-box">
-        <div class="gl">请复制下方 ID（长按可复制）</div>
-        <div class="gv" id="initIdText"></div>
-        <div class="gn">复制后按下方步骤填入代码</div>
-      </div>
-      <button class="copy-btn" onclick="copyInitId()">复制 ID</button>
-      <div class="yellow-box">
-        <b>接下来怎么做：</b><br>
-        ① 复制上方 ID<br>
-        ② 打开 GitHub，编辑 index.html<br>
-        ③ 找到 <b>MASTER_BIN_ID = ''</b><br>
-        ④ 把 ID 粘贴进引号里保存<br>
-        ⑤ 重新上传，永久完成
-      </div>
-    </div>
-    <button class="big-btn" id="initBtn" onclick="doInit()">开始初始化</button>
-  </div>
-</div>
-
-<!-- 首页 -->
-<div id="homePage" class="page">
-  <div class="home-top"><h1>⚡ 电表计算器<span>选择分组进入</span></h1></div>
-  <div class="home-body"><div id="groupArea"></div></div>
-  <div class="bottom-btns">
-    <button class="btn main-btn" onclick="openJoin()">输入共享码，加入分组</button>
-    <button class="btn sec-btn" onclick="createGroup()">新建分组，获取共享码</button>
-  </div>
-</div>
-
-<!-- 弹层 -->
 <div id="overlay" onclick="if(event.target===this)closeSheet()">
   <div class="sheet" id="sheetEl"></div>
 </div>
 
-<!-- 主应用 -->
-<div id="appPage" class="page">
-  <div class="topbar">
-    <div class="tl">
-      <div class="trow">
-        <button class="btn back-btn" onclick="goHome()">← 返回</button>
-        <span class="app-title" id="appTitle">我的分组</span>
-      </div>
-      <div class="srow">
-        <span class="code-mark">共享码：<strong id="appCode">——</strong></span>
-        <span class="sync-badge b-offline" id="syncBadge">离线</span>
-      </div>
+<div id="pages">
+
+  <!-- ══ 首页 ══ -->
+  <div id="homePage" class="page">
+    <div class="home-top"><h1>⚡ 电表计算器<span>选择分组进入</span></h1></div>
+    <div class="home-body"><div id="groupArea"></div></div>
+    <div class="bottom-btns">
+      <button class="main-btn" onclick="openJoin()">输入共享码，加入分组</button>
+      <button class="sec-btn" onclick="createGroup()">新建分组，获取共享码</button>
     </div>
-    <button class="btn edit-btn" id="editBtn" onclick="toggleEdit()">编辑</button>
   </div>
-  <div class="content" id="cardArea"></div>
+
+  <!-- ══ 主应用 ══ -->
+  <div id="appPage" class="page">
+    <div class="topbar">
+      <div class="tl">
+        <div class="trow">
+          <button class="back-btn" onclick="goHome()">← 返回</button>
+          <span class="app-title" id="appTitle">我的分组</span>
+        </div>
+        <div class="srow">
+          <span class="code-mark">共享码：<strong id="appCode">——</strong></span>
+          <span class="sync-badge b-offline" id="syncBadge">离线</span>
+        </div>
+      </div>
+      <button class="edit-btn" id="editBtn" onclick="toggleEdit()">编辑</button>
+    </div>
+    <div class="content" id="cardArea"></div>
+  </div>
+
 </div>
 
 <script>
-// ════════════════════════════════════════
 const API_KEY       = '$2a$10$j9sUqRhWLdd522Wt96yMbeh8iHm3CZw/pqAYyRXmxGPRGLNo86g2.';
 const MASTER_BIN_ID = '69b40c5bb7ec241ddc662d2a';
-// ════════════════════════════════════════
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(function(){});
 
-// 变量符号：A B C D E F G H
 var SYMS = ['A','B','C','D','E','F','G','H'];
 
-// ══ 云端读写（所有数据在一个 bin 里）══
-var HEADERS = {'Content-Type':'application/json','X-Master-Key':API_KEY};
+// ══ 页面切换 ══
+function navTo(page) {
+  if (page === 'app') {
+    document.getElementById('homePage').classList.add('slide-left');
+    document.getElementById('appPage').classList.add('slide-in');
+  } else {
+    document.getElementById('homePage').classList.remove('slide-left');
+    document.getElementById('appPage').classList.remove('slide-in');
+    // 滚回顶部
+    document.getElementById('homePage').scrollTop = 0;
+  }
+}
+
+// ══ 云端读写 ══
+var CLOUD_HEADERS = {'Content-Type':'application/json','X-Master-Key':API_KEY};
 
 async function cloudRead() {
   try {
-    var r = await fetch('https://api.jsonbin.io/v3/b/'+MASTER_BIN_ID+'/latest', {headers:HEADERS});
+    var r = await fetch('https://api.jsonbin.io/v3/b/'+MASTER_BIN_ID+'/latest',{headers:CLOUD_HEADERS});
     if (!r.ok) return null;
-    var d = await r.json();
-    return d.record || null;
-  } catch(e) { return null; }
+    return (await r.json()).record || null;
+  } catch(e){ return null; }
 }
 
 async function cloudWrite(data) {
   try {
-    var r = await fetch('https://api.jsonbin.io/v3/b/'+MASTER_BIN_ID, {
-      method:'PUT', headers:HEADERS, body:JSON.stringify(data)
+    var r = await fetch('https://api.jsonbin.io/v3/b/'+MASTER_BIN_ID,{
+      method:'PUT', headers:CLOUD_HEADERS, body:JSON.stringify(data)
     });
     return r.ok;
-  } catch(e) { return false; }
-}
-
-async function cloudCreate() {
-  try {
-    var h = Object.assign({}, HEADERS, {'X-Bin-Name':'meter_master','X-Bin-Private':'false'});
-    var r = await fetch('https://api.jsonbin.io/v3/b', {
-      method:'POST', headers:h, body:JSON.stringify({__init:true})
-    });
-    if (!r.ok) return null;
-    var d = await r.json();
-    return d.metadata && d.metadata.id ? d.metadata.id : null;
-  } catch(e) { return null; }
+  } catch(e){ return false; }
 }
 
 // ══ 本地存储 ══
 var GROUPS_KEY = 'meter_groups';
-var LOCAL_PRE  = 'meter_cache_';
+var CACHE_PRE  = 'meter_cache_';
 
-function readGroups() { try{return JSON.parse(localStorage.getItem(GROUPS_KEY)||'[]');}catch(e){return[];} }
-function saveGroups(l) { localStorage.setItem(GROUPS_KEY, JSON.stringify(l)); }
-function saveGroup(code, name) {
-  var l = readGroups().filter(function(g){return g.code!==code;});
-  l.unshift({code:code, name:name, time:Date.now()});
-  saveGroups(l);
-}
-function removeGroup(code) { saveGroups(readGroups().filter(function(g){return g.code!==code;})); }
-function readCache(code) { try{var s=localStorage.getItem(LOCAL_PRE+code);return s?JSON.parse(s):null;}catch(e){return null;} }
-function saveCache(code, p) { try{localStorage.setItem(LOCAL_PRE+code, JSON.stringify(p));}catch(e){} }
-function fmtTime(ts) {
-  var d = Date.now()-ts;
+function readGroups(){ try{return JSON.parse(localStorage.getItem(GROUPS_KEY)||'[]');}catch(e){return[];} }
+function saveGroups(l){ localStorage.setItem(GROUPS_KEY,JSON.stringify(l)); }
+function upsertGroup(code,name){ var l=readGroups().filter(function(g){return g.code!==code;}); l.unshift({code:code,name:name,time:Date.now()}); saveGroups(l); }
+function removeGroup(code){ saveGroups(readGroups().filter(function(g){return g.code!==code;})); }
+function readCache(code){ try{var s=localStorage.getItem(CACHE_PRE+code);return s?JSON.parse(s):null;}catch(e){return null;} }
+function saveCache(code,p){ try{localStorage.setItem(CACHE_PRE+code,JSON.stringify(p));}catch(e){} }
+
+function fmtTime(ts){
+  var d=Date.now()-ts;
   if(d<60000) return '刚刚';
   if(d<3600000) return Math.floor(d/60000)+'分钟前';
   if(d<86400000) return Math.floor(d/3600000)+'小时前';
   return Math.floor(d/86400000)+'天前';
 }
 
-// ══ 启动 ══
-function startup() {
-  if (MASTER_BIN_ID) {
-    showPage('homePage');
-    renderHome();
-  } else {
-    showPage('initPage');
-  }
-}
-
-async function doInit() {
-  var btn = document.getElementById('initBtn');
-  btn.disabled = true; btn.textContent = '正在创建…';
-  document.getElementById('initDesc').textContent = '正在连接云端，请稍候…';
-  var id = await cloudCreate();
-  if (!id) {
-    btn.disabled = false; btn.textContent = '网络失败，点此重试';
-    document.getElementById('initDesc').textContent = '连接失败，请检查网络后重试。';
-    return;
-  }
-  localStorage.setItem('meter_temp_bin_id', id);
-  document.getElementById('initIdText').textContent = id;
-  document.getElementById('initIdArea').style.display = 'block';
-  document.getElementById('initTitle').textContent = '初始化成功！';
-  document.getElementById('initDesc').textContent = '复制上方 ID，填入代码重新上传后永久有效。';
-  btn.textContent = '先跳过，体验一下';
-  btn.disabled = false;
-  btn.onclick = function(){ showPage('homePage'); renderHome(); };
-}
-
-function copyInitId() {
-  var id = document.getElementById('initIdText').textContent;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(id).then(function(){toast('已复制！','success');}).catch(function(){toast('请长按上方 ID 手动复制','info');});
-  } else { toast('请长按上方 ID 手动复制','info'); }
-}
-
-function getBinId() { return MASTER_BIN_ID || localStorage.getItem('meter_temp_bin_id') || null; }
-
-// ══ 页面切换 ══
-function showPage(id) {
-  ['initPage','homePage','appPage'].forEach(function(p){
-    document.getElementById(p).classList.remove('active');
-  });
-  document.getElementById(id).classList.add('active');
-}
-
 // ══ 首页 ══
-function renderHome() {
-  var l = readGroups();
-  var el = document.getElementById('groupArea');
-  if (!l.length) {
-    el.innerHTML = '<div class="empty"><div class="ei">📋</div><p>还没有加入任何分组<br>点下方按钮新建或加入</p></div>';
+function renderHome(){
+  var l=readGroups(); var el=document.getElementById('groupArea');
+  if(!l.length){
+    el.innerHTML='<div class="empty"><div class="ei">📋</div><p>还没有加入任何分组<br>点下方按钮新建或加入</p></div>';
     return;
   }
-  el.innerHTML = '<div class="group-list">'+l.map(function(g){
+  el.innerHTML='<div class="group-list">'+l.map(function(g){
     return '<div class="gc" onclick="enterGroup(\''+g.code+'\',\''+esc(g.name)+'\')">'+
       '<div class="gc-icon">⚡</div>'+
       '<div class="gc-info">'+
@@ -338,43 +251,43 @@ function renderHome() {
       '</div>'+
       '<div class="gc-right">'+
         '<span class="gc-arrow">›</span>'+
-        '<button class="btn del-gc-btn" onclick="event.stopPropagation();confirmDelGroup(\''+g.code+'\',\''+esc(g.name)+'\')">删除</button>'+
+        '<button class="del-gc-btn" onclick="event.stopPropagation();confirmDelGroup(\''+g.code+'\',\''+esc(g.name)+'\')">删除</button>'+
       '</div>'+
     '</div>';
   }).join('')+'</div>';
 }
 
-function confirmDelGroup(code, name) {
-  if (confirm('删除分组「'+name+'」的本机记录？\n不影响他人使用。')) {
+function confirmDelGroup(code,name){
+  if(confirm('删除分组「'+name+'」的本机记录？\n不影响他人使用。')){
     removeGroup(code); renderHome();
   }
 }
 
 // ══ 弹层 ══
-function closeSheet() { document.getElementById('overlay').classList.remove('show'); }
-function showSheet(html) { document.getElementById('sheetEl').innerHTML = html; document.getElementById('overlay').classList.add('show'); }
+function closeSheet(){ document.getElementById('overlay').classList.remove('show'); }
+function showSheet(html){ document.getElementById('sheetEl').innerHTML=html; document.getElementById('overlay').classList.add('show'); }
 
-function openJoin() {
+function openJoin(){
   showSheet(
     '<h2>加入分组</h2>'+
     '<p class="sh-desc">输入同事给你的 6 位共享码</p>'+
     '<input class="code-inp" id="codeInp" type="text" maxlength="6" inputmode="numeric" placeholder="— — — — — —" oninput="this.value=this.value.replace(/\\D/g,\'\')">'+
     '<div class="code-hint">向同事索取 6 位数字</div>'+
-    '<button class="sh-main-btn" onclick="confirmJoin()">加入</button>'+
-    '<button class="sh-sec-btn" onclick="closeSheet()">取消</button>'
+    '<button class="sh-main" onclick="confirmJoin()">加入</button>'+
+    '<button class="sh-sec" onclick="closeSheet()">取消</button>'
   );
-  setTimeout(function(){ var el=document.getElementById('codeInp'); if(el) el.focus(); }, 100);
+  setTimeout(function(){var el=document.getElementById('codeInp');if(el)el.focus();},100);
 }
 
-function confirmJoin() {
-  var code = (document.getElementById('codeInp').value||'').trim();
-  if (!code||code.length!==6||!/^\d{6}$/.test(code)) { toast('请输入 6 位数字','error'); return; }
+function confirmJoin(){
+  var code=(document.getElementById('codeInp').value||'').trim();
+  if(!code||code.length!==6||!/^\d{6}$/.test(code)){toast('请输入 6 位数字','error');return;}
   closeSheet();
-  enterGroup(code, '分组 '+code);
+  enterGroup(code,'分组 '+code);
 }
 
-function createGroup() {
-  var code = String(Math.floor(100000+Math.random()*900000));
+function createGroup(){
+  var code=String(Math.floor(100000+Math.random()*900000));
   showSheet(
     '<h2>新建成功！</h2>'+
     '<p class="sh-desc">把共享码发给同事，对方输入后公式自动同步</p>'+
@@ -383,70 +296,65 @@ function createGroup() {
       '<div class="nc-num">'+code+'</div>'+
       '<div class="nc-note">把这 6 位数字告诉同事即可</div>'+
     '</div>'+
-    '<button class="sh-main-btn" onclick="closeSheet();enterGroup(\''+code+'\',\'我的分组\')">知道了，开始使用</button>'
+    '<button class="sh-main" onclick="closeSheet();enterGroup(\''+code+'\',\'我的分组\')">知道了，开始使用</button>'
   );
 }
 
 // ══ 应用状态 ══
-var currentCode = '', editing = false, cards = [], idSeq = 1, syncTimer = null;
+var currentCode='', editing=false, cards=[], idSeq=1, syncTimer=null;
 
-function defaultCards() {
-  idSeq = 1;
+function defaultCards(){
+  idSeq=1;
   return [
-    {id:idSeq++, name:'本月用电量', formula:'A - B',
-     vars:[{name:'本期示数（度）',sym:'A',val:''},{name:'上期示数（度）',sym:'B',val:''}], unit:'度'},
-    {id:idSeq++, name:'本月电费', formula:'A * B',
-     vars:[{name:'用电量（度）',sym:'A',val:''},{name:'电价（元/度）',sym:'B',val:'0.6'}], unit:'元'},
-    {id:idSeq++, name:'多户分摊', formula:'A / B',
-     vars:[{name:'总电费（元）',sym:'A',val:''},{name:'户数',sym:'B',val:''}], unit:'元/户'},
-    {id:idSeq++, name:'峰谷合计', formula:'A + B',
-     vars:[{name:'峰段用电（度）',sym:'A',val:''},{name:'谷段用电（度）',sym:'B',val:''}], unit:'度'},
+    {id:idSeq++,name:'本月用电量',formula:'A - B',vars:[{name:'本期示数（度）',sym:'A',val:''},{name:'上期示数（度）',sym:'B',val:''}],unit:'度'},
+    {id:idSeq++,name:'本月电费',formula:'A * B',vars:[{name:'用电量（度）',sym:'A',val:''},{name:'电价（元/度）',sym:'B',val:'0.6'}],unit:'元'},
+    {id:idSeq++,name:'多户分摊',formula:'A / B',vars:[{name:'总电费（元）',sym:'A',val:''},{name:'户数',sym:'B',val:''}],unit:'元/户'},
+    {id:idSeq++,name:'峰谷合计',formula:'A + B',vars:[{name:'峰段用电（度）',sym:'A',val:''},{name:'谷段用电（度）',sym:'B',val:''}],unit:'度'},
   ];
 }
 
-async function enterGroup(code, name) {
-  saveGroup(code, name);
+async function enterGroup(code,name){
+  upsertGroup(code,name);
   renderHome();
-  await enterApp(code, false, name);
+  await enterApp(code,false,name);
 }
 
-async function enterApp(code, isNew, name) {
-  currentCode = code; editing = false;
-  document.getElementById('appTitle').textContent = name;
-  document.getElementById('appCode').textContent = code;
-  document.getElementById('editBtn').textContent = '编辑';
-  document.getElementById('editBtn').className = 'btn edit-btn';
-  showPage('appPage');
+async function enterApp(code,isNew,name){
+  currentCode=code; editing=false;
+  document.getElementById('appTitle').textContent=name;
+  document.getElementById('appCode').textContent=code;
+  document.getElementById('editBtn').textContent='编辑';
+  document.getElementById('editBtn').className='edit-btn';
+  document.getElementById('appPage').scrollTop=0;
 
-  var cache = readCache(code);
-  if (cache) { cards = cache.list; idSeq = cache.seq || cards.length+1; }
-  else       { cards = defaultCards(); idSeq = cards.length+1; }
+  var cache=readCache(code);
+  if(cache){cards=cache.list;idSeq=cache.seq||cards.length+1;}
+  else{cards=defaultCards();idSeq=cards.length+1;}
   renderCards();
 
-  if (!getBinId()) { setBadge('offline'); startSync(); return; }
+  // 先跳转，后台同步
+  navTo('app');
+
   setBadge('syncing');
-  var all = await cloudRead();
-  if (isNew) {
-    var p = {list:cards, seq:idSeq, ts:Date.now()};
-    var newAll = all || {};
-    newAll[code] = p;
-    var ok = await cloudWrite(newAll);
-    if (ok) saveCache(code, p);
+  var all=await cloudRead();
+  if(isNew){
+    var p={list:cards,seq:idSeq,ts:Date.now()};
+    var newAll=all||{}; newAll[code]=p;
+    var ok=await cloudWrite(newAll);
+    if(ok) saveCache(code,p);
     setBadge(ok?'synced':'offline');
   } else {
-    if (all && all[code]) {
-      var g = all[code];
-      if (!cache || g.ts > cache.ts) {
-        cards = g.list; idSeq = g.seq || cards.length+1;
-        saveCache(code, {list:cards, seq:idSeq, ts:g.ts});
+    if(all&&all[code]){
+      var g=all[code];
+      if(!cache||g.ts>cache.ts){
+        cards=g.list; idSeq=g.seq||cards.length+1;
+        saveCache(code,{list:cards,seq:idSeq,ts:g.ts});
         renderCards();
       }
       setBadge('synced');
-    } else if (all) {
-      var p2 = {list:cards, seq:idSeq, ts:Date.now()};
-      all[code] = p2;
-      await cloudWrite(all);
-      saveCache(code, p2);
+    } else if(all){
+      var p2={list:cards,seq:idSeq,ts:Date.now()};
+      all[code]=p2; await cloudWrite(all); saveCache(code,p2);
       setBadge('synced');
     } else {
       setBadge('offline');
@@ -455,217 +363,202 @@ async function enterApp(code, isNew, name) {
   startSync();
 }
 
-function goHome() {
-  if (syncTimer) { clearInterval(syncTimer); syncTimer = null; }
-  showPage('homePage');
+function goHome(){
+  if(syncTimer){clearInterval(syncTimer);syncTimer=null;}
+  navTo('home');
   renderHome();
 }
 
-// ══ 定时拉取 ══
-function startSync() {
-  if (syncTimer) clearInterval(syncTimer);
-  syncTimer = setInterval(async function() {
-    if (!getBinId()) { setBadge('offline'); return; }
-    var all = await cloudRead();
-    if (!all) { setBadge('offline'); return; }
-    var g = all[currentCode];
-    if (!g) { setBadge('offline'); return; }
-    var cache = readCache(currentCode);
-    if (g.ts > (cache ? cache.ts : 0)) {
-      cards = g.list; idSeq = g.seq || cards.length+1;
-      saveCache(currentCode, {list:cards, seq:idSeq, ts:g.ts});
+function startSync(){
+  if(syncTimer) clearInterval(syncTimer);
+  syncTimer=setInterval(async function(){
+    var all=await cloudRead();
+    if(!all){setBadge('offline');return;}
+    var g=all[currentCode];
+    if(!g){setBadge('offline');return;}
+    var cache=readCache(currentCode);
+    if(g.ts>(cache?cache.ts:0)){
+      cards=g.list; idSeq=g.seq||cards.length+1;
+      saveCache(currentCode,{list:cards,seq:idSeq,ts:g.ts});
       renderCards();
-      toast('公式已更新', 'success');
+      toast('公式已更新','success');
     }
     setBadge('synced');
-  }, 10000);
+  },10000);
 }
 
-// ══ 推送云端 ══
-async function pushCloud() {
-  if (!getBinId()) { setBadge('offline'); return; }
+async function pushCloud(){
   setBadge('syncing');
-  var ts = Date.now();
-  var p = {list:cards, seq:idSeq, ts:ts};
-  saveCache(currentCode, p);
-  var all = await cloudRead() || {};
-  all[currentCode] = p;
-  var ok = await cloudWrite(all);
-  setBadge(ok ? 'synced' : 'offline');
+  var ts=Date.now();
+  var p={list:cards,seq:idSeq,ts:ts};
+  saveCache(currentCode,p);
+  var all=await cloudRead()||{};
+  all[currentCode]=p;
+  var ok=await cloudWrite(all);
+  setBadge(ok?'synced':'offline');
 }
 
 // ══ 计算 ══
-function calcResult(formula, vars) {
-  try {
-    var hasEmpty = false;
-    vars.forEach(function(v){ if(v.val==='') hasEmpty = true; });
-    if (hasEmpty) return {ok:false, empty:true};
-    var expr = formula;
-    // 按符号长度降序替换，避免替换顺序问题
-    vars.slice().sort(function(a,b){ return b.sym.length - a.sym.length; }).forEach(function(v){
-      var re = new RegExp(v.sym.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g');
-      expr = expr.replace(re, String(parseFloat(v.val)||0));
+function calcResult(formula,vars){
+  try{
+    var hasEmpty=false;
+    vars.forEach(function(v){if(v.val==='')hasEmpty=true;});
+    if(hasEmpty) return {ok:false,empty:true};
+    var expr=formula;
+    vars.slice().sort(function(a,b){return b.sym.length-a.sym.length;}).forEach(function(v){
+      var re=new RegExp(v.sym.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g');
+      expr=expr.replace(re,String(parseFloat(v.val)||0));
     });
-    var r = Function('"use strict";return ('+expr+')')();
-    if (typeof r==='number' && isFinite(r)) return {ok:true, val:Math.round(r*10000)/10000};
+    var r=Function('"use strict";return ('+expr+')')();
+    if(typeof r==='number'&&isFinite(r)) return {ok:true,val:Math.round(r*10000)/10000};
     return {ok:false};
-  } catch(e) { return {ok:false}; }
+  }catch(e){return {ok:false};}
 }
 
-// 非编辑态把字母替换成变量名显示
-function displayFormula(w) {
-  var s = w.formula;
-  w.vars.slice().sort(function(a,b){ return b.sym.length-a.sym.length; }).forEach(function(v){
-    var re = new RegExp(v.sym.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g');
-    s = s.replace(re, v.name);
+function displayFormula(w){
+  var s=w.formula;
+  w.vars.slice().sort(function(a,b){return b.sym.length-a.sym.length;}).forEach(function(v){
+    var re=new RegExp(v.sym.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g');
+    s=s.replace(re,v.name);
   });
   return s;
 }
 
-function makeResultHTML(w) {
-  var res = calcResult(w.formula, w.vars);
-  var unitPart = editing
-    ? '<input class="runit-inp" value="'+esc(w.unit)+'" placeholder="单位" onchange="setUnit('+w.id+',this.value)">'
-    : '<span class="runit">'+w.unit+'</span>';
-  if (res.ok)    return '<div class="rbox"><span class="rlabel">结果</span><span class="rval">'+res.val+'</span>'+unitPart+'</div>';
-  if (res.empty) return '<div class="rbox"><span class="rlabel">结果</span><span class="rempty">——</span>'+unitPart+'</div>';
-  return '<div class="errbox">公式有误（用字母 A B C 对应下方变量，支持 + - * /）</div>';
+function makeResultHTML(w){
+  var res=calcResult(w.formula,w.vars);
+  var unitPart=editing
+    ?'<input class="runit-inp" value="'+esc(w.unit)+'" placeholder="单位" onchange="setUnit('+w.id+',this.value)">'
+    :'<span class="runit">'+w.unit+'</span>';
+  if(res.ok)    return '<div class="rbox"><span class="rlabel">结果</span><span class="rval">'+res.val+'</span>'+unitPart+'</div>';
+  if(res.empty) return '<div class="rbox"><span class="rlabel">结果</span><span class="rempty">——</span>'+unitPart+'</div>';
+  return '<div class="errbox">公式有误（字母 A B C 对应下方变量，支持 + - * /）</div>';
 }
 
-function refreshResult(id) {
-  var w = cards.find(function(c){ return c.id===id; });
-  var card = document.querySelector('[data-id="'+id+'"]');
-  if (!w||!card) return;
-  var rc = card.querySelector('.result-container');
-  if (rc) rc.innerHTML = makeResultHTML(w);
+function refreshResult(id){
+  var w=cards.find(function(c){return c.id===id;});
+  var card=document.querySelector('[data-id="'+id+'"]');
+  if(!w||!card) return;
+  var rc=card.querySelector('.rc');
+  if(rc) rc.innerHTML=makeResultHTML(w);
 }
 
 // ══ 渲染卡片 ══
-function renderCards() {
-  var area = document.getElementById('cardArea');
-  area.innerHTML = '';
-  cards.forEach(function(w) {
-    var el = document.createElement('div');
-    el.className = 'card' + (editing ? ' ed' : '');
-    el.dataset.id = w.id;
+function renderCards(){
+  var area=document.getElementById('cardArea');
+  area.innerHTML='';
+  cards.forEach(function(w){
+    var el=document.createElement('div');
+    el.className='card'+(editing?' ed':'');
+    el.dataset.id=w.id;
 
-    var head = editing
-      ? '<input class="ctitle-inp" value="'+esc(w.name)+'" onchange="setName('+w.id+',this.value)"><button class="btn del-card-btn" onclick="delCard('+w.id+')">删除</button>'
-      : '<span class="ctitle">'+w.name+'</span>';
+    var head=editing
+      ?'<input class="ctitle-inp" value="'+esc(w.name)+'" onchange="setName('+w.id+',this.value)"><button class="del-card-btn" onclick="delCard('+w.id+')">删除</button>'
+      :'<span class="ctitle">'+w.name+'</span>';
 
     var frow;
-    if (editing) {
-      var mapping = w.vars.map(function(v){ return v.sym+'='+v.name; }).join('，');
-      frow = '<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #EAEAE6">'
+    if(editing){
+      var mapping=w.vars.map(function(v){return v.sym+'='+v.name;}).join('，');
+      frow='<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #EAEAE6">'
         +'<div class="frow" style="margin:0;padding:0;border:0">'
         +'<span class="flabel">公式</span>'
         +'<input class="finput" value="'+esc(w.formula)+'" oninput="setFormula('+w.id+',this.value)">'
         +'</div>'
-        +'<div class="fhint">用字母写公式：'+mapping+'<br>支持 + - * /，例如 A - B</div>'
+        +'<div class="fhint">字母与变量对应：'+mapping+'<br>支持 + - * /，例如 A - B</div>'
         +'</div>';
     } else {
-      frow = '<div class="frow"><span class="flabel">公式</span><span class="fdisplay">'+displayFormula(w)+'</span></div>';
+      frow='<div class="frow"><span class="flabel">公式</span><span class="fdisplay">'+displayFormula(w)+'</span></div>';
     }
 
-    var vars = w.vars.map(function(v,i){
+    var vars=w.vars.map(function(v,i){
       return editing
-        ? '<div class="vrow">'
+        ?'<div class="vrow">'
           +'<div class="sym">'+v.sym+'</div>'
-          +'<input class="vname-inp" value="'+esc(v.name)+'" onchange="setVarName('+w.id+','+i+',this.value)" placeholder="变量名">'
+          +'<input class="vname-inp" value="'+esc(v.name)+'" onchange="setVarName('+w.id+','+i+',this.value)">'
           +'<input class="numinp" type="number" inputmode="decimal" value="'+v.val+'" placeholder="——" oninput="setVal('+w.id+','+i+',this.value)">'
-          +(w.vars.length>1?'<button class="btn del-var-btn" onclick="delVar('+w.id+','+i+')">删除</button>':'')
+          +(w.vars.length>1?'<button class="del-var-btn" onclick="delVar('+w.id+','+i+')">删除</button>':'')
           +'</div>'
-        : '<div class="vrow">'
+        :'<div class="vrow">'
           +'<div class="sym">'+v.sym+'</div>'
           +'<span class="vname">'+v.name+'</span>'
           +'<input class="numinp" type="number" inputmode="decimal" value="'+v.val+'" placeholder="请输入" oninput="setVal('+w.id+','+i+',this.value)">'
           +'</div>';
     }).join('');
 
-    el.innerHTML =
+    el.innerHTML=
       '<div class="chead">'+head+'</div>'
       +'<div class="cbody">'+frow
       +'<div class="vlist">'+vars+'</div>'
-      +(editing?'<button class="btn add-var-btn" onclick="addVar('+w.id+')">＋ 新增变量</button>':'')
-      +'<div class="result-container">'+makeResultHTML(w)+'</div>'
+      +(editing?'<button class="add-var-btn" onclick="addVar('+w.id+')">＋ 新增变量</button>':'')
+      +'<div class="rc">'+makeResultHTML(w)+'</div>'
       +'</div>';
     area.appendChild(el);
   });
 
-  if (editing) {
-    var ab = document.createElement('button');
-    ab.className = 'btn add-card-btn';
-    ab.textContent = '＋ 新增计算项目';
-    ab.onclick = addCard;
+  if(editing){
+    var ab=document.createElement('button');
+    ab.className='add-card-btn'; ab.textContent='＋ 新增计算项目'; ab.onclick=addCard;
     area.appendChild(ab);
   }
-  var eb = document.getElementById('editBtn');
-  eb.textContent = editing ? '完成' : '编辑';
-  eb.className = 'btn edit-btn' + (editing ? ' on' : '');
+  var eb=document.getElementById('editBtn');
+  eb.textContent=editing?'完成':'编辑';
+  eb.className='edit-btn'+(editing?' on':'');
 }
 
 // ══ 编辑操作 ══
-function toggleEdit() { editing=!editing; if(!editing) pushCloud(); renderCards(); }
-
-function setName(id, v) {
-  var w = cards.find(function(c){ return c.id===id; });
-  if (!w) return;
-  w.name = v;
-  var l = readGroups(); var g = l.find(function(g){ return g.code===currentCode; });
-  if (g) { g.name=v; saveGroups(l); }
-  document.getElementById('appTitle').textContent = v;
+function toggleEdit(){editing=!editing;if(!editing)pushCloud();renderCards();}
+function setName(id,v){
+  var w=cards.find(function(c){return c.id===id;}); if(!w)return; w.name=v;
+  var l=readGroups(); var g=l.find(function(g){return g.code===currentCode;});
+  if(g){g.name=v;saveGroups(l);}
+  document.getElementById('appTitle').textContent=v;
 }
-function setFormula(id, v) { var w=cards.find(function(c){return c.id===id;}); if(w){w.formula=v;refreshResult(id);} }
-function setVal(id, i, v)  { var w=cards.find(function(c){return c.id===id;}); if(w){w.vars[i].val=v;refreshResult(id);} }
-function setVarName(id,i,v){ var w=cards.find(function(c){return c.id===id;}); if(w) w.vars[i].name=v; }
-function setUnit(id, v)    { var w=cards.find(function(c){return c.id===id;}); if(w) w.unit=v; }
-
-function addVar(id) {
-  var w = cards.find(function(c){return c.id===id;});
-  if (!w) return;
-  if (w.vars.length >= SYMS.length) { toast('最多支持'+SYMS.length+'个变量','error'); return; }
-  w.vars.push({name:'新变量', sym:SYMS[w.vars.length], val:''});
+function setFormula(id,v){var w=cards.find(function(c){return c.id===id;});if(w){w.formula=v;refreshResult(id);}}
+function setVal(id,i,v){var w=cards.find(function(c){return c.id===id;});if(w){w.vars[i].val=v;refreshResult(id);}}
+function setVarName(id,i,v){var w=cards.find(function(c){return c.id===id;});if(w)w.vars[i].name=v;}
+function setUnit(id,v){var w=cards.find(function(c){return c.id===id;});if(w)w.unit=v;}
+function addVar(id){
+  var w=cards.find(function(c){return c.id===id;}); if(!w)return;
+  if(w.vars.length>=SYMS.length){toast('最多支持'+SYMS.length+'个变量','error');return;}
+  w.vars.push({name:'新变量',sym:SYMS[w.vars.length],val:''});
   renderCards();
 }
-function delVar(id, i) {
-  var w = cards.find(function(c){return c.id===id;});
-  if (w && w.vars.length>1) {
-    w.vars.splice(i,1);
-    w.vars.forEach(function(v,idx){ v.sym=SYMS[idx]; });
-    renderCards();
-  }
+function delVar(id,i){
+  var w=cards.find(function(c){return c.id===id;}); if(!w||w.vars.length<=1)return;
+  w.vars.splice(i,1);
+  w.vars.forEach(function(v,idx){v.sym=SYMS[idx];});
+  renderCards();
 }
-function delCard(id) {
-  if (cards.length<=1) { toast('至少保留一个计算项目','error'); return; }
-  if (!confirm('确认删除这个计算项目？')) return;
-  cards = cards.filter(function(c){return c.id!==id;}); renderCards();
+function delCard(id){
+  if(cards.length<=1){toast('至少保留一个计算项目','error');return;}
+  if(!confirm('确认删除这个计算项目？'))return;
+  cards=cards.filter(function(c){return c.id!==id;}); renderCards();
 }
-function addCard() {
-  cards.push({id:++idSeq, name:'新计算项目', formula:'A + B',
-    vars:[{name:'变量1',sym:'A',val:''},{name:'变量2',sym:'B',val:''}], unit:''});
+function addCard(){
+  cards.push({id:++idSeq,name:'新计算项目',formula:'A + B',
+    vars:[{name:'变量1',sym:'A',val:''},{name:'变量2',sym:'B',val:''}],unit:''});
   renderCards();
 }
 
 // ══ 工具 ══
-function setBadge(s) {
-  var el = document.getElementById('syncBadge');
-  if (!el) return;
-  el.className = 'sync-badge';
-  if (s==='syncing') { el.classList.add('b-syncing'); el.textContent='同步中…'; }
-  else if (s==='synced') { el.classList.add('b-synced'); el.textContent='已同步'; }
-  else { el.classList.add('b-offline'); el.textContent='离线'; }
+function setBadge(s){
+  var el=document.getElementById('syncBadge'); if(!el)return;
+  el.className='sync-badge';
+  if(s==='syncing'){el.classList.add('b-syncing');el.textContent='同步中…';}
+  else if(s==='synced'){el.classList.add('b-synced');el.textContent='已同步';}
+  else{el.classList.add('b-offline');el.textContent='离线';}
 }
-var toastTimer = null;
-function toast(msg, type) {
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = (type==='success'?'t-success':type==='error'?'t-error':'t-info') + ' show';
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+var toastTimer=null;
+function toast(msg,type){
+  var el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className=(type==='success'?'t-success':type==='error'?'t-error':'t-info')+' show';
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){el.classList.remove('show');},2600);
 }
-function esc(s) { return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function esc(s){return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
-startup();
+// ══ 启动 ══
+renderHome();
 </script>
 </body>
 </html>
