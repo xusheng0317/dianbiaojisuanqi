@@ -695,9 +695,9 @@ function 渲染计算页() {
   const 容 = document.getElementById('内容区');
   容.innerHTML = '';
   数据.forEach(w => {
-    const res = 计算(w.公式, w.变量);
     const el = document.createElement('div');
     el.className = '卡片' + (编辑中 ? ' 编辑态' : '');
+    el.dataset.id = w.id;
 
     const 卡头内容 = 编辑中
       ? `<input class="卡头名输入" value="${esc(w.名)}" onchange="改名(${w.id},this.value)">
@@ -726,22 +726,13 @@ function 渲染计算页() {
          </div>`
     ).join('');
 
-    const 单位内容 = 编辑中
-      ? `<input class="单位输入" value="${esc(w.单位)}" placeholder="单位" onchange="改单位(${w.id},this.value)">`
-      : `<span class="结果单位">${w.单位}</span>`;
-
-    let 结果HTML;
-    if (res.ok)        结果HTML = `<div class="结果区"><span class="结果标">结果</span><span class="结果值">${res.值}</span>${单位内容}</div>`;
-    else if (res.empty)结果HTML = `<div class="结果区"><span class="结果标">结果</span><span class="结果空">——</span>${单位内容}</div>`;
-    else               结果HTML = `<div class="错误区">公式有误，请在编辑模式下检查</div>`;
-
     el.innerHTML = `
       <div class="卡头">${卡头内容}</div>
       <div class="卡体">
         ${公式内容}
         <div class="变量列表">${变量内容}</div>
         ${编辑中 ? `<button class="btn 加变量btn" onclick="加变量(${w.id})">＋ 新增一行变量</button>` : ''}
-        ${结果HTML}
+        <div class="结果容器">${生成结果HTML(w)}</div>
       </div>`;
     容.appendChild(el);
   });
@@ -774,8 +765,27 @@ function 改名(id, v) {
   if (g) { g.名 = v; 存分组列表(l); }
   document.getElementById('应用标题').textContent = v;
 }
-function 改公式(id, v)   { 数据.find(w => w.id === id).公式 = v; 渲染计算页(); }
-function 改数值(id, i, v){ 数据.find(w => w.id === id).变量[i].值 = v; 渲染计算页(); }
+function 生成结果HTML(w) {
+  const res = 计算(w.公式, w.变量);
+  const 单位内容 = 编辑中
+    ? `<input class="单位输入" value="${esc(w.单位)}" placeholder="单位" onchange="改单位(${w.id},this.value)">`
+    : `<span class="结果单位">${w.单位}</span>`;
+  if (res.ok)         return `<div class="结果区"><span class="结果标">结果</span><span class="结果值">${res.值}</span>${单位内容}</div>`;
+  else if (res.empty) return `<div class="结果区"><span class="结果标">结果</span><span class="结果空">——</span>${单位内容}</div>`;
+  else                return `<div class="错误区">公式有误，请在编辑模式下检查</div>`;
+}
+
+// 只刷新结果区，不重渲染整页，避免输入框失焦
+function 刷新结果(id) {
+  const w = 数据.find(w => w.id === id);
+  const 卡 = document.querySelector(`[data-id="${id}"]`);
+  if (!卡) return;
+  const 容器 = 卡.querySelector('.结果容器');
+  if (容器) 容器.innerHTML = 生成结果HTML(w);
+}
+
+function 改公式(id, v)   { 数据.find(w => w.id === id).公式 = v; 刷新结果(id); }
+function 改数值(id, i, v){ 数据.find(w => w.id === id).变量[i].值 = v; 刷新结果(id); }
 function 改变量名(id, i, v) {
   const w = 数据.find(w => w.id === id);
   const 旧 = w.变量[i].符;
