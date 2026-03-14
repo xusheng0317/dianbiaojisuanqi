@@ -10,281 +10,159 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>电表计算器</title>
-
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; background: #F5F5F0; font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; color: #1a1a1a; }
-.隐藏 { display: none !important; }
-.btn { font-family: inherit; cursor: pointer; border: none; outline: none; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:#F5F5F0;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;color:#1a1a1a;overflow-x:hidden;}
+.page{display:none;} .page.active{display:block;}
+.btn{font-family:inherit;cursor:pointer;border:none;outline:none;background:none;}
 
-/* 提示条 */
-#提示条 {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-  padding: 14px 20px; font-size: 17px; font-weight: 500; text-align: center;
-  transform: translateY(-100%); transition: transform .3s;
-}
-#提示条.显示 { transform: translateY(0); }
-.提示成功 { background: #1D9E75; color: #fff; }
-.提示错误 { background: #CC3333; color: #fff; }
-.提示普通 { background: #333; color: #fff; }
+#toast{position:fixed;top:0;left:0;right:0;z-index:9999;padding:13px 16px;font-size:16px;font-weight:500;text-align:center;transform:translateY(-100%);transition:transform .3s;}
+#toast.show{transform:translateY(0);}
+.t-success{background:#1D9E75;color:#fff;}
+.t-error{background:#CC3333;color:#fff;}
+.t-info{background:#333;color:#fff;}
 
 /* ══ 初始化页 ══ */
-#初始化页 {
-  min-height: 100vh; display: flex; align-items: center;
-  justify-content: center; padding: 24px;
-}
-.初始化卡 {
-  width: 100%; max-width: 380px; background: #fff;
-  border-radius: 22px; padding: 36px 28px;
-  box-shadow: 0 4px 28px rgba(0,0,0,.10);
-}
-.初始化卡 .图标 { font-size: 52px; text-align: center; margin-bottom: 16px; }
-.初始化卡 h1 { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 10px; }
-.初始化卡 p { font-size: 16px; color: #555; text-align: center; line-height: 1.7; margin-bottom: 28px; }
-.大绿btn {
-  width: 100%; font-size: 20px; font-weight: 600; padding: 18px;
-  border-radius: 14px; background: #1a1a1a; color: #fff;
-  border: none; cursor: pointer; font-family: inherit; margin-bottom: 12px;
-}
-.大绿btn:active { opacity: .85; }
-.大绿btn:disabled { background: #bbb; cursor: not-allowed; }
-.绿色框 {
-  background: #F0FAF6; border: 2px solid #A7F3D0;
-  border-radius: 16px; padding: 22px; margin-bottom: 22px;
-}
-.绿色框 .小标 { font-size: 15px; color: #065F46; font-weight: 500; margin-bottom: 10px; text-align: center; }
-.绿色框 .id文字 {
-  font-size: 14px; font-weight: 700; color: #065F46;
-  word-break: break-all; text-align: center; line-height: 1.7;
-  font-family: 'Courier New', monospace; user-select: all;
-}
-.绿色框 .小注 { font-size: 14px; color: #0F6E56; margin-top: 10px; line-height: 1.6; text-align: center; }
-.黄色框 {
-  background: #FFFBEB; border: 1.5px solid #FDE68A;
-  border-radius: 13px; padding: 18px;
-  font-size: 15px; color: #78350F; line-height: 1.9; margin-bottom: 20px;
-}
-.黄色框 b { color: #1a1a1a; }
+#initPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.init-card{width:100%;max-width:380px;background:#fff;border-radius:22px;padding:36px 28px;box-shadow:0 4px 28px rgba(0,0,0,.10);}
+.init-icon{font-size:52px;text-align:center;margin-bottom:16px;}
+.init-card h1{font-size:24px;font-weight:700;text-align:center;margin-bottom:10px;}
+.init-card p{font-size:16px;color:#555;text-align:center;line-height:1.7;margin-bottom:28px;}
+.big-btn{width:100%;font-size:20px;font-weight:600;padding:18px;border-radius:14px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;margin-bottom:12px;}
+.big-btn:active{opacity:.85;}
+.big-btn:disabled{background:#bbb;cursor:not-allowed;}
+.green-box{background:#F0FAF6;border:2px solid #A7F3D0;border-radius:16px;padding:22px;margin-bottom:22px;}
+.green-box .gl{font-size:15px;color:#065F46;font-weight:500;margin-bottom:10px;text-align:center;}
+.green-box .gv{font-size:13px;font-weight:700;color:#065F46;word-break:break-all;text-align:center;line-height:1.7;font-family:'Courier New',monospace;user-select:all;}
+.green-box .gn{font-size:14px;color:#0F6E56;margin-top:10px;text-align:center;line-height:1.6;}
+.copy-btn{width:100%;font-size:18px;font-weight:500;padding:15px;border-radius:13px;background:#1D9E75;color:#fff;border:none;cursor:pointer;font-family:inherit;margin-bottom:16px;}
+.yellow-box{background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:13px;padding:18px;font-size:15px;color:#78350F;line-height:1.9;margin-bottom:20px;}
+.yellow-box b{color:#1a1a1a;}
 
 /* ══ 首页 ══ */
-#首页 { min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 48px; }
-.首页顶 { padding: 28px 22px 10px; }
-.首页顶 h1 { font-size: 30px; font-weight: 700; }
-.首页顶 span { display: block; font-size: 17px; font-weight: 400; color: #888; margin-top: 5px; }
-.首页体 { flex: 1; padding: 16px 18px 0; }
-.空状态 {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 64px 24px; text-align: center;
-}
-.空状态 .空图标 { font-size: 52px; margin-bottom: 16px; }
-.空状态 p { font-size: 18px; color: #888; line-height: 1.7; }
-.分组列表 { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
-.分组卡 {
-  background: #fff; border-radius: 18px; border: 2px solid #EAEAE6;
-  padding: 18px 20px; display: flex; align-items: center; gap: 14px; cursor: pointer;
-}
-.分组卡:active { border-color: #1D9E75; background: #F9FFFE; }
-.分组卡 .卡图标 {
-  width: 52px; height: 52px; border-radius: 14px; background: #1a1a1a;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px; flex-shrink: 0;
-}
-.分组卡 .卡信息 { flex: 1; min-width: 0; }
-.分组卡 .卡名 { font-size: 20px; font-weight: 600; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.分组卡 .卡副 { display: flex; align-items: center; gap: 10px; }
-.分组卡 .卡码 { font-size: 16px; color: #888; font-weight: 500; letter-spacing: 3px; }
-.分组卡 .卡时间 { font-size: 14px; color: #bbb; }
-.分组卡 .卡右 { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
-.分组卡 .卡箭头 { font-size: 24px; color: #ccc; }
-.删分组btn {
-  font-size: 14px; font-weight: 500; padding: 6px 12px;
-  border: 1.5px solid #FECACA; border-radius: 10px;
-  background: #FEF2F2; color: #B91C1C; cursor: pointer; font-family: inherit;
-}
-.底部按钮区 { padding: 0 18px; display: flex; flex-direction: column; gap: 12px; }
-.主btn {
-  width: 100%; font-size: 20px; font-weight: 600; padding: 18px;
-  border-radius: 16px; background: #1a1a1a; color: #fff;
-  border: none; cursor: pointer; font-family: inherit;
-}
-.主btn:active { opacity: .85; }
-.次btn {
-  width: 100%; font-size: 18px; font-weight: 500; padding: 16px;
-  border-radius: 16px; background: #fff; color: #1a1a1a;
-  border: 2px solid #E0E0DA; cursor: pointer; font-family: inherit;
-}
-.次btn:active { background: #F5F5F0; }
+#homePage{min-height:100vh;display:flex;flex-direction:column;padding-bottom:48px;}
+.home-top{padding:28px 20px 8px;}
+.home-top h1{font-size:28px;font-weight:700;}
+.home-top span{display:block;font-size:16px;font-weight:400;color:#888;margin-top:5px;}
+.home-body{flex:1;padding:14px 16px 0;}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;}
+.empty .ei{font-size:48px;margin-bottom:14px;}
+.empty p{font-size:17px;color:#888;line-height:1.7;}
+.group-list{display:flex;flex-direction:column;gap:13px;margin-bottom:18px;}
+.gc{background:#fff;border-radius:17px;border:2px solid #EAEAE6;padding:16px 18px;display:flex;align-items:center;gap:13px;cursor:pointer;}
+.gc:active{border-color:#1D9E75;background:#F9FFFE;}
+.gc-icon{width:50px;height:50px;border-radius:13px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.gc-info{flex:1;min-width:0;}
+.gc-name{font-size:19px;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gc-sub{display:flex;align-items:center;gap:8px;}
+.gc-code{font-size:15px;color:#888;font-weight:500;letter-spacing:2px;}
+.gc-time{font-size:13px;color:#bbb;}
+.gc-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0;}
+.gc-arrow{font-size:23px;color:#ccc;}
+.del-gc-btn{font-size:13px;font-weight:500;padding:5px 11px;border:1.5px solid #FECACA;border-radius:9px;background:#FEF2F2;color:#B91C1C;cursor:pointer;font-family:inherit;}
+.bottom-btns{padding:0 16px;display:flex;flex-direction:column;gap:11px;}
+.main-btn{width:100%;font-size:19px;font-weight:600;padding:17px;border-radius:15px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;}
+.main-btn:active{opacity:.85;}
+.sec-btn{width:100%;font-size:17px;font-weight:500;padding:15px;border-radius:15px;background:#fff;color:#1a1a1a;border:2px solid #E0E0DA;cursor:pointer;font-family:inherit;}
+.sec-btn:active{background:#F5F5F0;}
 
 /* ══ 弹层 ══ */
-#弹层背景 {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,.45); display: flex; align-items: flex-end;
-}
-.弹层 { width: 100%; background: #fff; border-radius: 24px 24px 0 0; padding: 28px 24px 52px; }
-.弹层 h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-.弹层 .弹层说明 { font-size: 15px; color: #888; margin-bottom: 24px; line-height: 1.6; }
-.码输入 {
-  width: 100%; font-size: 42px; font-weight: 700; letter-spacing: 10px;
-  text-align: center; color: #1a1a1a; border: 2px solid #E0E0DA;
-  border-radius: 14px; padding: 18px 12px; outline: none;
-  background: #FAFAF8; font-family: inherit; margin-bottom: 8px;
-}
-.码输入:focus { border-color: #1D9E75; }
-.码小注 { font-size: 14px; color: #aaa; text-align: center; margin-bottom: 24px; }
-.弹层主btn {
-  width: 100%; font-size: 20px; font-weight: 600; padding: 18px;
-  border-radius: 14px; background: #1a1a1a; color: #fff;
-  border: none; cursor: pointer; font-family: inherit; margin-bottom: 12px;
-}
-.弹层主btn:active { opacity: .85; }
-.弹层主btn:disabled { background: #bbb; cursor: not-allowed; }
-.弹层次btn {
-  width: 100%; font-size: 18px; font-weight: 500; padding: 15px;
-  border-radius: 14px; background: transparent; color: #888;
-  border: 2px solid #E8E8E4; cursor: pointer; font-family: inherit;
-}
-.弹层次btn:active { background: #F5F5F0; }
-.新建码展示 { background: #F0FAF6; border: 2px solid #A7F3D0; border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 22px; }
-.新建码展示 .码标 { font-size: 16px; color: #065F46; font-weight: 500; margin-bottom: 10px; }
-.新建码展示 .码数 { font-size: 52px; font-weight: 700; color: #065F46; letter-spacing: 12px; }
-.新建码展示 .码注 { font-size: 15px; color: #0F6E56; margin-top: 10px; line-height: 1.6; }
+#overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);display:none;align-items:flex-end;}
+#overlay.show{display:flex;}
+.sheet{width:100%;background:#fff;border-radius:24px 24px 0 0;padding:28px 22px 52px;}
+.sheet h2{font-size:21px;font-weight:700;margin-bottom:7px;}
+.sheet .sh-desc{font-size:15px;color:#888;margin-bottom:22px;line-height:1.6;}
+.code-inp{width:100%;font-size:40px;font-weight:700;letter-spacing:9px;text-align:center;border:2px solid #E0E0DA;border-radius:13px;padding:17px 10px;outline:none;background:#FAFAF8;font-family:inherit;margin-bottom:7px;}
+.code-inp:focus{border-color:#1D9E75;}
+.code-hint{font-size:13px;color:#aaa;text-align:center;margin-bottom:22px;}
+.sh-main-btn{width:100%;font-size:19px;font-weight:600;padding:17px;border-radius:13px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-family:inherit;margin-bottom:11px;}
+.sh-main-btn:active{opacity:.85;}
+.sh-main-btn:disabled{background:#bbb;cursor:not-allowed;}
+.sh-sec-btn{width:100%;font-size:17px;font-weight:500;padding:14px;border-radius:13px;background:transparent;color:#888;border:2px solid #E8E8E4;cursor:pointer;font-family:inherit;}
+.sh-sec-btn:active{background:#F5F5F0;}
+.new-code-box{background:#F0FAF6;border:2px solid #A7F3D0;border-radius:15px;padding:22px;text-align:center;margin-bottom:20px;}
+.nc-label{font-size:15px;color:#065F46;font-weight:500;margin-bottom:9px;}
+.nc-num{font-size:50px;font-weight:700;color:#065F46;letter-spacing:11px;}
+.nc-note{font-size:14px;color:#0F6E56;margin-top:9px;line-height:1.6;}
 
 /* ══ 主应用 ══ */
-#主应用 { min-height: 100vh; padding-bottom: 48px; }
-.顶栏 {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 18px 14px; background: #fff;
-  border-bottom: 1px solid #EAEAE6; position: sticky; top: 0; z-index: 50;
-}
-.顶栏左 { display: flex; flex-direction: column; gap: 4px; }
-.顶栏标题行 { display: flex; align-items: center; gap: 10px; }
-.返回btn {
-  font-size: 16px; font-weight: 500; padding: 7px 14px;
-  border-radius: 11px; border: 2px solid #E0E0DA;
-  background: #fff; color: #555; cursor: pointer; font-family: inherit;
-}
-.返回btn:active { background: #F5F5F0; }
-.应用标题 { font-size: 20px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
-.状态行 { display: flex; align-items: center; gap: 8px; }
-.码标记 { font-size: 14px; color: #555; font-weight: 500; }
-.同步徽章 { font-size: 13px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
-.徽同步中 { background: #FFF8E1; color: #B45309; }
-.徽已同步 { background: #DCFCE7; color: #166534; }
-.徽离线   { background: #F3F4F6; color: #6B7280; }
-.编辑btn {
-  font-size: 18px; font-weight: 600; padding: 11px 22px;
-  border-radius: 13px; border: 2px solid #D0D0CC;
-  background: #fff; color: #1a1a1a; font-family: inherit; cursor: pointer;
-}
-.编辑btn.激活 { background: #1D9E75; border-color: #1D9E75; color: #fff; }
+#appPage{min-height:100vh;padding-bottom:48px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 16px 13px;background:#fff;border-bottom:1px solid #EAEAE6;position:sticky;top:0;z-index:50;}
+.tl{display:flex;flex-direction:column;gap:4px;}
+.trow{display:flex;align-items:center;gap:9px;}
+.back-btn{font-size:15px;font-weight:500;padding:7px 13px;border-radius:10px;border:2px solid #E0E0DA;background:#fff;color:#555;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.back-btn:active{background:#F5F5F0;}
+.app-title{font-size:19px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px;}
+.srow{display:flex;align-items:center;gap:7px;}
+.code-mark{font-size:13px;color:#555;font-weight:500;}
+.sync-badge{font-size:12px;font-weight:500;padding:2px 9px;border-radius:20px;}
+.b-syncing{background:#FFF8E1;color:#B45309;}
+.b-synced{background:#DCFCE7;color:#166534;}
+.b-offline{background:#F3F4F6;color:#6B7280;}
+.edit-btn{font-size:17px;font-weight:600;padding:10px 21px;border-radius:12px;border:2px solid #D0D0CC;background:#fff;color:#1a1a1a;font-family:inherit;cursor:pointer;}
+.edit-btn.on{background:#1D9E75;border-color:#1D9E75;color:#fff;}
 
-.内容区 { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+.content{padding:16px;display:flex;flex-direction:column;gap:16px;}
 
-/* 计算卡片 */
-.卡片 { background: #fff; border-radius: 18px; overflow: hidden; border: 2px solid #EAEAE6; }
-.卡片.编辑态 { border-color: #1D9E75; }
-.卡头 {
-  display: flex; align-items: center; gap: 12px;
-  padding: 16px 18px; background: #FAFAF8; border-bottom: 1px solid #EAEAE6;
-}
-.卡头名 { flex: 1; font-size: 21px; font-weight: 600; }
-.卡头名输入 {
-  flex: 1; font-size: 20px; font-weight: 600; background: #fff;
-  border: 2px solid #D0D0CC; border-radius: 10px; padding: 7px 11px;
-  outline: none; font-family: inherit; color: #1a1a1a;
-}
-.删卡btn {
-  font-size: 16px; font-weight: 500; padding: 9px 16px; border-radius: 11px;
-  border: 2px solid #FECACA; background: #FEF2F2; color: #B91C1C;
-  font-family: inherit; cursor: pointer; white-space: nowrap;
-}
-.卡体 { padding: 18px; }
-.公式行 {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid #EAEAE6;
-}
-.小标签 { font-size: 16px; color: #888; white-space: nowrap; }
-.公式展示 {
-  flex: 1; font-size: 16px; color: #555;
-  font-family: 'Courier New', monospace;
-  background: #F5F5F0; padding: 9px 14px; border-radius: 11px; word-break: break-all;
-}
-.公式输入 {
-  flex: 1; font-size: 16px; font-family: 'Courier New', monospace;
-  color: #1a1a1a; background: #fff; border: 2px solid #D0D0CC;
-  border-radius: 11px; padding: 9px 12px; outline: none;
-}
-.公式输入:focus { border-color: #1D9E75; }
-.公式提示 { font-size: 13px; color: #aaa; margin-top: 6px; }
-.变量列表 { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
-.变量行 { display: flex; align-items: center; gap: 12px; }
-.变量名 { font-size: 18px; color: #555; min-width: 110px; max-width: 140px; line-height: 1.35; }
-.变量名输入 {
-  font-size: 16px; width: 130px; background: #fff;
-  border: 2px solid #D0D0CC; border-radius: 10px; padding: 8px 10px;
-  outline: none; font-family: inherit; color: #1a1a1a;
-}
-.数值输入 {
-  flex: 1; font-size: 30px; font-weight: 600; padding: 13px 16px;
-  border: 2px solid #E0E0DA; border-radius: 13px; text-align: right;
-  background: #fff; color: #1a1a1a; outline: none; font-family: inherit;
-}
-.数值输入:focus { border-color: #1D9E75; }
-.数值输入::placeholder { color: #ccc; font-size: 24px; font-weight: 400; }
-.删变量btn {
-  font-size: 15px; font-weight: 500; padding: 9px 14px; border-radius: 10px;
-  border: 2px solid #FECACA; background: #FEF2F2; color: #B91C1C;
-  font-family: inherit; cursor: pointer; white-space: nowrap;
-}
-.加变量btn {
-  width: 100%; font-size: 18px; padding: 14px;
-  border: 2px dashed #D0D0CC; border-radius: 13px;
-  background: transparent; color: #888; font-family: inherit; cursor: pointer; margin-bottom: 18px;
-}
-.加变量btn:active { background: #F5F5F0; }
-.结果区 {
-  display: flex; align-items: center; gap: 12px; padding: 16px 18px;
-  border-radius: 15px; background: #F0FAF6; border: 2px solid #A7F3D0;
-}
-.结果标 { font-size: 18px; color: #065F46; font-weight: 600; white-space: nowrap; }
-.结果值 { flex: 1; font-size: 42px; font-weight: 700; color: #065F46; text-align: right; }
-.结果空 { flex: 1; font-size: 34px; font-weight: 600; color: #A7F3D0; text-align: right; }
-.结果单位 { font-size: 20px; color: #065F46; font-weight: 500; }
-.单位输入 {
-  font-size: 18px; width: 70px; text-align: center;
-  background: transparent; border: none; border-bottom: 2px solid #A7F3D0;
-  color: #065F46; outline: none; font-family: inherit;
-}
-.错误区 {
-  padding: 16px 18px; border-radius: 15px;
-  background: #FEF2F2; border: 2px solid #FECACA;
-  font-size: 17px; color: #B91C1C; text-align: center;
-}
-.加卡片btn {
-  width: 100%; font-size: 20px; font-weight: 500; padding: 20px;
-  border-radius: 18px; border: 2px dashed #D0D0CC;
-  background: #fff; color: #888; cursor: pointer; font-family: inherit;
-}
-.加卡片btn:active { background: #F5F5F0; }
+/* 卡片 */
+.card{background:#fff;border-radius:17px;overflow:hidden;border:2px solid #EAEAE6;}
+.card.ed{border-color:#1D9E75;}
+.chead{display:flex;align-items:center;gap:11px;padding:14px 16px;background:#FAFAF8;border-bottom:1px solid #EAEAE6;}
+.ctitle{flex:1;font-size:20px;font-weight:700;}
+.ctitle-inp{flex:1;font-size:19px;font-weight:700;background:#fff;border:2px solid #D0D0CC;border-radius:9px;padding:7px 10px;outline:none;font-family:inherit;color:#1a1a1a;}
+.del-card-btn{font-size:15px;font-weight:500;padding:8px 15px;border-radius:10px;border:2px solid #FECACA;background:#FEF2F2;color:#B91C1C;font-family:inherit;cursor:pointer;white-space:nowrap;}
+.cbody{padding:16px;}
+
+/* 公式行 */
+.frow{display:flex;align-items:center;gap:9px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #EAEAE6;}
+.flabel{font-size:15px;color:#888;white-space:nowrap;}
+.fdisplay{flex:1;font-size:14px;color:#555;font-family:'Courier New',monospace;background:#F5F5F0;padding:9px 12px;border-radius:10px;word-break:break-all;min-width:0;}
+.finput{flex:1;font-size:15px;font-family:'Courier New',monospace;color:#1a1a1a;background:#fff;border:2px solid #D0D0CC;border-radius:10px;padding:9px 11px;outline:none;min-width:0;}
+.finput:focus{border-color:#1D9E75;}
+.fhint{font-size:12px;color:#aaa;margin-top:6px;line-height:1.7;}
+
+/* 变量行 */
+.vlist{display:flex;flex-direction:column;gap:12px;margin-bottom:14px;}
+.vrow{display:flex;align-items:center;gap:9px;}
+.sym{width:27px;height:27px;border-radius:7px;background:#1a1a1a;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vname{font-size:16px;color:#555;flex:0 0 108px;min-width:0;line-height:1.35;}
+.vname-inp{font-size:14px;flex:0 0 108px;min-width:0;background:#fff;border:2px solid #D0D0CC;border-radius:9px;padding:7px 9px;outline:none;font-family:inherit;color:#1a1a1a;}
+.numinp{flex:1;font-size:28px;font-weight:600;padding:11px 13px;border:2px solid #E0E0DA;border-radius:13px;text-align:right;background:#fff;color:#1a1a1a;outline:none;font-family:inherit;min-width:0;width:0;}
+.numinp:focus{border-color:#1D9E75;}
+.numinp::placeholder{color:#ccc;font-size:22px;font-weight:400;}
+.del-var-btn{font-size:13px;padding:8px 11px;border-radius:9px;border:2px solid #FECACA;background:#FEF2F2;color:#B91C1C;font-family:inherit;cursor:pointer;flex-shrink:0;}
+.add-var-btn{width:100%;font-size:16px;padding:13px;border:2px dashed #D0D0CC;border-radius:12px;background:transparent;color:#888;font-family:inherit;cursor:pointer;margin-bottom:14px;}
+.add-var-btn:active{background:#F5F5F0;}
+
+/* 结果 */
+.rbox{display:flex;align-items:center;gap:11px;padding:15px 17px;border-radius:14px;background:#F0FAF6;border:2px solid #A7F3D0;}
+.rlabel{font-size:17px;color:#065F46;font-weight:600;white-space:nowrap;}
+.rval{flex:1;font-size:38px;font-weight:700;color:#065F46;text-align:right;}
+.rempty{flex:1;font-size:32px;font-weight:600;color:#A7F3D0;text-align:right;}
+.runit{font-size:18px;color:#065F46;font-weight:500;}
+.runit-inp{font-size:16px;width:54px;text-align:center;background:transparent;border:none;border-bottom:2px solid #A7F3D0;color:#065F46;outline:none;font-family:inherit;}
+.errbox{padding:15px 17px;border-radius:14px;background:#FEF2F2;border:2px solid #FECACA;font-size:15px;color:#B91C1C;text-align:center;}
+.add-card-btn{width:100%;font-size:18px;font-weight:500;padding:19px;border-radius:17px;border:2px dashed #D0D0CC;background:#fff;color:#888;cursor:pointer;font-family:inherit;}
+.add-card-btn:active{background:#F5F5F0;}
 </style>
 </head>
 <body>
-<div id="提示条"></div>
+<div id="toast"></div>
 
-<!-- ══ 初始化页（MASTER_BIN_ID 为空时显示） ══ -->
-<div id="初始化页" class="隐藏">
-  <div class="初始化卡">
-    <div class="图标">⚡</div>
-    <h1 id="初始化标题">首次初始化</h1>
-    <p id="初始化说明">点击下方按钮，在云端创建一个共享存储空间。只需做一次，之后所有人自动同步。</p>
-    <div id="初始化ID区" class="隐藏">
-      <div class="绿色框">
-        <div class="小标">请复制下方 ID（长按可复制）</div>
-        <div class="id文字" id="初始化ID"></div>
-        <div class="小注">复制后按下方步骤填入代码</div>
+<!-- 初始化页 -->
+<div id="initPage" class="page">
+  <div class="init-card">
+    <div class="init-icon">⚡</div>
+    <h1 id="initTitle">首次初始化</h1>
+    <p id="initDesc">点击下方按钮，在云端创建共享存储空间。只需做一次。</p>
+    <div id="initIdArea" class="隐藏" style="display:none">
+      <div class="green-box">
+        <div class="gl">请复制下方 ID（长按可复制）</div>
+        <div class="gv" id="initIdText"></div>
+        <div class="gn">复制后按下方步骤填入代码</div>
       </div>
-      <button class="大绿btn" style="background:#1D9E75;margin-bottom:16px" onclick="复制初始化ID()">复制 ID</button>
-      <div class="黄色框">
+      <button class="copy-btn" onclick="copyInitId()">复制 ID</button>
+      <div class="yellow-box">
         <b>接下来怎么做：</b><br>
         ① 复制上方 ID<br>
         ② 打开 GitHub，编辑 index.html<br>
@@ -293,546 +171,501 @@ html, body { height: 100%; background: #F5F5F0; font-family: -apple-system, 'Pin
         ⑤ 重新上传，永久完成
       </div>
     </div>
-    <button class="大绿btn" id="初始化按钮" onclick="执行初始化()">开始初始化</button>
+    <button class="big-btn" id="initBtn" onclick="doInit()">开始初始化</button>
   </div>
 </div>
 
-<!-- ══ 首页 ══ -->
-<div id="首页" class="隐藏">
-  <div class="首页顶">
-    <h1>⚡ 电表计算器<span>选择分组进入</span></h1>
-  </div>
-  <div class="首页体"><div id="分组列表区"></div></div>
-  <div class="底部按钮区">
-    <button class="btn 主btn" onclick="打开加入弹层()">输入共享码，加入分组</button>
-    <button class="btn 次btn" onclick="新建分组()">新建分组，获取共享码</button>
+<!-- 首页 -->
+<div id="homePage" class="page">
+  <div class="home-top"><h1>⚡ 电表计算器<span>选择分组进入</span></h1></div>
+  <div class="home-body"><div id="groupArea"></div></div>
+  <div class="bottom-btns">
+    <button class="btn main-btn" onclick="openJoin()">输入共享码，加入分组</button>
+    <button class="btn sec-btn" onclick="createGroup()">新建分组，获取共享码</button>
   </div>
 </div>
 
-<!-- ══ 弹层 ══ -->
-<div id="弹层背景" class="隐藏" onclick="if(event.target===this)关闭弹层()">
-  <div class="弹层" id="弹层内容"></div>
+<!-- 弹层 -->
+<div id="overlay" onclick="if(event.target===this)closeSheet()">
+  <div class="sheet" id="sheetEl"></div>
 </div>
 
-<!-- ══ 主应用 ══ -->
-<div id="主应用" class="隐藏">
-  <div class="顶栏">
-    <div class="顶栏左">
-      <div class="顶栏标题行">
-        <button class="btn 返回btn" onclick="返回首页()">← 返回</button>
-        <span class="应用标题" id="应用标题"></span>
+<!-- 主应用 -->
+<div id="appPage" class="page">
+  <div class="topbar">
+    <div class="tl">
+      <div class="trow">
+        <button class="btn back-btn" onclick="goHome()">← 返回</button>
+        <span class="app-title" id="appTitle">我的分组</span>
       </div>
-      <div class="状态行">
-        <span class="码标记">共享码：<strong id="顶栏码"></strong></span>
-        <span class="同步徽章 徽离线" id="同步徽章">离线</span>
+      <div class="srow">
+        <span class="code-mark">共享码：<strong id="appCode">——</strong></span>
+        <span class="sync-badge b-offline" id="syncBadge">离线</span>
       </div>
     </div>
-    <button class="btn 编辑btn" id="编辑btn" onclick="切换编辑()">编辑</button>
+    <button class="btn edit-btn" id="editBtn" onclick="toggleEdit()">编辑</button>
   </div>
-  <div class="内容区" id="内容区"></div>
+  <div class="content" id="cardArea"></div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.1/math.min.js"></script>
 <script>
-// ════════════════════════════════════════
-//  配置（密钥已填好，初始化后填入 ID）
 // ════════════════════════════════════════
 const API_KEY       = '$2a$10$j9sUqRhWLdd522Wt96yMbeh8iHm3CZw/pqAYyRXmxGPRGLNo86g2.';
 const MASTER_BIN_ID = '69b40c5bb7ec241ddc662d2a';
 // ════════════════════════════════════════
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
-}
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(function(){});
 
-// ══ jsonbin.io 底层操作 ══
-// 云端只存一个 bin，格式：
-// { "123456": {列表, 编号计数, 时间戳}, "789012": {...} }
+// 变量符号：A B C D E F G H
+var SYMS = ['A','B','C','D','E','F','G','H'];
 
-async function 云端读取() {
+// ══ 云端读写（所有数据在一个 bin 里）══
+var HEADERS = {'Content-Type':'application/json','X-Master-Key':API_KEY};
+
+async function cloudRead() {
   try {
-    const r = await fetch(
-      `https://api.jsonbin.io/v3/b/${MASTER_BIN_ID}/latest`,
-      { headers: { 'X-Master-Key': API_KEY } }
-    );
+    var r = await fetch('https://api.jsonbin.io/v3/b/'+MASTER_BIN_ID+'/latest', {headers:HEADERS});
     if (!r.ok) return null;
-    const d = await r.json();
+    var d = await r.json();
     return d.record || null;
-  } catch (e) { return null; }
+  } catch(e) { return null; }
 }
 
-async function 云端写入(全部数据) {
+async function cloudWrite(data) {
   try {
-    const r = await fetch(
-      `https://api.jsonbin.io/v3/b/${MASTER_BIN_ID}`,
-      {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
-        body: JSON.stringify(全部数据)
-      }
-    );
+    var r = await fetch('https://api.jsonbin.io/v3/b/'+MASTER_BIN_ID, {
+      method:'PUT', headers:HEADERS, body:JSON.stringify(data)
+    });
     return r.ok;
-  } catch (e) { return false; }
+  } catch(e) { return false; }
 }
 
-async function 云端创建() {
+async function cloudCreate() {
   try {
-    const r = await fetch('https://api.jsonbin.io/v3/b', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': API_KEY,
-        'X-Bin-Name': 'meter_master',
-        'X-Bin-Private': 'false'
-      },
-      body: JSON.stringify({ __init: true })
+    var h = Object.assign({}, HEADERS, {'X-Bin-Name':'meter_master','X-Bin-Private':'false'});
+    var r = await fetch('https://api.jsonbin.io/v3/b', {
+      method:'POST', headers:h, body:JSON.stringify({__init:true})
     });
     if (!r.ok) return null;
-    const d = await r.json();
-    return d.metadata?.id || null;
-  } catch (e) { return null; }
-}
-
-// ══ 初始化 ══
-async function 执行初始化() {
-  const btn = document.getElementById('初始化按钮');
-  btn.disabled = true;
-  btn.textContent = '正在创建…';
-  document.getElementById('初始化说明').textContent = '正在连接云端，请稍候…';
-
-  const id = await 云端创建();
-
-  if (!id) {
-    btn.disabled = false;
-    btn.textContent = '网络失败，点此重试';
-    document.getElementById('初始化说明').textContent = '连接失败，请检查网络后重试。';
-    return;
-  }
-
-  // 展示 ID
-  document.getElementById('初始化ID').textContent = id;
-  document.getElementById('初始化ID区').classList.remove('隐藏');
-  document.getElementById('初始化标题').textContent = '初始化成功！';
-  document.getElementById('初始化说明').textContent = '复制上方 ID，按步骤填入代码重新上传，以后所有人自动同步。';
-
-  // 临时记住，让当前设备先能用
-  localStorage.setItem('meter_temp_bin_id', id);
-
-  btn.textContent = '先跳过，体验一下';
-  btn.disabled = false;
-  btn.onclick = 进入首页;
-}
-
-function 复制初始化ID() {
-  const id = document.getElementById('初始化ID').textContent;
-  navigator.clipboard?.writeText(id)
-    .then(() => 提示('已复制！', '成功'))
-    .catch(() => 提示('请长按上方 ID 手动复制', '普通'));
-}
-
-function 获取BinId() {
-  return MASTER_BIN_ID || localStorage.getItem('meter_temp_bin_id') || null;
-}
-
-// ══ 启动 ══
-function 启动() {
-  if (获取BinId()) {
-    进入首页();
-  } else {
-    document.getElementById('初始化页').classList.remove('隐藏');
-  }
-}
-
-function 进入首页() {
-  document.getElementById('初始化页').classList.add('隐藏');
-  document.getElementById('首页').classList.remove('隐藏');
-  渲染首页();
+    var d = await r.json();
+    return d.metadata && d.metadata.id ? d.metadata.id : null;
+  } catch(e) { return null; }
 }
 
 // ══ 本地存储 ══
-const GROUPS_KEY   = 'meter_groups';
-const LOCAL_PREFIX = 'meter_cache_';
+var GROUPS_KEY = 'meter_groups';
+var LOCAL_PRE  = 'meter_cache_';
 
-function 读分组列表() {
-  try { return JSON.parse(localStorage.getItem(GROUPS_KEY) || '[]'); } catch (e) { return []; }
+function readGroups() { try{return JSON.parse(localStorage.getItem(GROUPS_KEY)||'[]');}catch(e){return[];} }
+function saveGroups(l) { localStorage.setItem(GROUPS_KEY, JSON.stringify(l)); }
+function saveGroup(code, name) {
+  var l = readGroups().filter(function(g){return g.code!==code;});
+  l.unshift({code:code, name:name, time:Date.now()});
+  saveGroups(l);
 }
-function 存分组列表(l) { localStorage.setItem(GROUPS_KEY, JSON.stringify(l)); }
-function 保存分组(码, 名) {
-  const l = 读分组列表().filter(g => g.码 !== 码);
-  l.unshift({ 码, 名, 时间: Date.now() });
-  存分组列表(l);
-}
-function 删分组(码) { 存分组列表(读分组列表().filter(g => g.码 !== 码)); }
-function 读缓存(码) {
-  try { const s = localStorage.getItem(LOCAL_PREFIX + 码); return s ? JSON.parse(s) : null; } catch (e) { return null; }
-}
-function 存缓存(码, p) {
-  try { localStorage.setItem(LOCAL_PREFIX + 码, JSON.stringify(p)); } catch (e) {}
-}
-function 时间格式(ts) {
-  if (!ts) return '';
-  const d = Date.now() - ts;
-  if (d < 60000) return '刚刚';
-  if (d < 3600000) return Math.floor(d / 60000) + '分钟前';
-  if (d < 86400000) return Math.floor(d / 3600000) + '小时前';
-  return Math.floor(d / 86400000) + '天前';
+function removeGroup(code) { saveGroups(readGroups().filter(function(g){return g.code!==code;})); }
+function readCache(code) { try{var s=localStorage.getItem(LOCAL_PRE+code);return s?JSON.parse(s):null;}catch(e){return null;} }
+function saveCache(code, p) { try{localStorage.setItem(LOCAL_PRE+code, JSON.stringify(p));}catch(e){} }
+function fmtTime(ts) {
+  var d = Date.now()-ts;
+  if(d<60000) return '刚刚';
+  if(d<3600000) return Math.floor(d/60000)+'分钟前';
+  if(d<86400000) return Math.floor(d/3600000)+'小时前';
+  return Math.floor(d/86400000)+'天前';
 }
 
-// ══ 渲染首页 ══
-function 渲染首页() {
-  const l = 读分组列表();
-  const el = document.getElementById('分组列表区');
-  if (!l.length) {
-    el.innerHTML = `<div class="空状态"><div class="空图标">📋</div><p>还没有加入任何分组<br>点下方按钮新建或加入</p></div>`;
+// ══ 启动 ══
+function startup() {
+  if (MASTER_BIN_ID) {
+    showPage('homePage');
+    renderHome();
+  } else {
+    showPage('initPage');
+  }
+}
+
+async function doInit() {
+  var btn = document.getElementById('initBtn');
+  btn.disabled = true; btn.textContent = '正在创建…';
+  document.getElementById('initDesc').textContent = '正在连接云端，请稍候…';
+  var id = await cloudCreate();
+  if (!id) {
+    btn.disabled = false; btn.textContent = '网络失败，点此重试';
+    document.getElementById('initDesc').textContent = '连接失败，请检查网络后重试。';
     return;
   }
-  el.innerHTML = `<div class="分组列表">${l.map(g => `
-    <div class="分组卡" onclick="进入分组('${g.码}','${esc(g.名)}')">
-      <div class="卡图标">⚡</div>
-      <div class="卡信息">
-        <div class="卡名">${g.名}</div>
-        <div class="卡副">
-          <span class="卡码">${g.码}</span>
-          <span class="卡时间">${时间格式(g.时间)}</span>
-        </div>
-      </div>
-      <div class="卡右">
-        <span class="卡箭头">›</span>
-        <button class="btn 删分组btn" onclick="event.stopPropagation();确认删分组('${g.码}','${esc(g.名)}')">删除</button>
-      </div>
-    </div>`).join('')}</div>`;
+  localStorage.setItem('meter_temp_bin_id', id);
+  document.getElementById('initIdText').textContent = id;
+  document.getElementById('initIdArea').style.display = 'block';
+  document.getElementById('initTitle').textContent = '初始化成功！';
+  document.getElementById('initDesc').textContent = '复制上方 ID，填入代码重新上传后永久有效。';
+  btn.textContent = '先跳过，体验一下';
+  btn.disabled = false;
+  btn.onclick = function(){ showPage('homePage'); renderHome(); };
 }
 
-function 确认删分组(码, 名) {
-  if (confirm(`删除「${名}」的本机记录？\n不影响他人使用。`)) {
-    删分组(码);
-    渲染首页();
+function copyInitId() {
+  var id = document.getElementById('initIdText').textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(id).then(function(){toast('已复制！','success');}).catch(function(){toast('请长按上方 ID 手动复制','info');});
+  } else { toast('请长按上方 ID 手动复制','info'); }
+}
+
+function getBinId() { return MASTER_BIN_ID || localStorage.getItem('meter_temp_bin_id') || null; }
+
+// ══ 页面切换 ══
+function showPage(id) {
+  ['initPage','homePage','appPage'].forEach(function(p){
+    document.getElementById(p).classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+}
+
+// ══ 首页 ══
+function renderHome() {
+  var l = readGroups();
+  var el = document.getElementById('groupArea');
+  if (!l.length) {
+    el.innerHTML = '<div class="empty"><div class="ei">📋</div><p>还没有加入任何分组<br>点下方按钮新建或加入</p></div>';
+    return;
+  }
+  el.innerHTML = '<div class="group-list">'+l.map(function(g){
+    return '<div class="gc" onclick="enterGroup(\''+g.code+'\',\''+esc(g.name)+'\')">'+
+      '<div class="gc-icon">⚡</div>'+
+      '<div class="gc-info">'+
+        '<div class="gc-name">'+g.name+'</div>'+
+        '<div class="gc-sub"><span class="gc-code">'+g.code+'</span><span class="gc-time">'+fmtTime(g.time)+'</span></div>'+
+      '</div>'+
+      '<div class="gc-right">'+
+        '<span class="gc-arrow">›</span>'+
+        '<button class="btn del-gc-btn" onclick="event.stopPropagation();confirmDelGroup(\''+g.code+'\',\''+esc(g.name)+'\')">删除</button>'+
+      '</div>'+
+    '</div>';
+  }).join('')+'</div>';
+}
+
+function confirmDelGroup(code, name) {
+  if (confirm('删除分组「'+name+'」的本机记录？\n不影响他人使用。')) {
+    removeGroup(code); renderHome();
   }
 }
 
 // ══ 弹层 ══
-function 关闭弹层() { document.getElementById('弹层背景').classList.add('隐藏'); }
-function 显示弹层(html) {
-  document.getElementById('弹层内容').innerHTML = html;
-  document.getElementById('弹层背景').classList.remove('隐藏');
+function closeSheet() { document.getElementById('overlay').classList.remove('show'); }
+function showSheet(html) { document.getElementById('sheetEl').innerHTML = html; document.getElementById('overlay').classList.add('show'); }
+
+function openJoin() {
+  showSheet(
+    '<h2>加入分组</h2>'+
+    '<p class="sh-desc">输入同事给你的 6 位共享码</p>'+
+    '<input class="code-inp" id="codeInp" type="text" maxlength="6" inputmode="numeric" placeholder="— — — — — —" oninput="this.value=this.value.replace(/\\D/g,\'\')">'+
+    '<div class="code-hint">向同事索取 6 位数字</div>'+
+    '<button class="sh-main-btn" onclick="confirmJoin()">加入</button>'+
+    '<button class="sh-sec-btn" onclick="closeSheet()">取消</button>'
+  );
+  setTimeout(function(){ var el=document.getElementById('codeInp'); if(el) el.focus(); }, 100);
 }
 
-function 打开加入弹层() {
-  显示弹层(`
-    <h2>加入分组</h2>
-    <p class="弹层说明">输入同事给你的 6 位共享码</p>
-    <input class="码输入" id="码框" type="text" maxlength="6" inputmode="numeric"
-      placeholder="— — — — — —"
-      oninput="this.value=this.value.replace(/\\D/g,'')"
-      onkeydown="if(event.key==='Enter')确认加入()">
-    <div class="码小注">向同事索取 6 位数字</div>
-    <button class="btn 弹层主btn" id="加入btn" onclick="确认加入()">加入</button>
-    <button class="btn 弹层次btn" onclick="关闭弹层()">取消</button>`);
-  setTimeout(() => document.getElementById('码框')?.focus(), 100);
+function confirmJoin() {
+  var code = (document.getElementById('codeInp').value||'').trim();
+  if (!code||code.length!==6||!/^\d{6}$/.test(code)) { toast('请输入 6 位数字','error'); return; }
+  closeSheet();
+  enterGroup(code, '分组 '+code);
 }
 
-async function 确认加入() {
-  const 码 = document.getElementById('码框')?.value.trim();
-  if (!码 || 码.length !== 6 || !/^\d{6}$/.test(码)) {
-    提示('请输入 6 位数字', '错误'); return;
-  }
-  const btn = document.getElementById('加入btn');
-  if (btn) { btn.disabled = true; btn.textContent = '连接中…'; }
-  关闭弹层();
-  await 进入应用(码, false, '分组 ' + 码);
-}
-
-async function 新建分组() {
-  const 码 = String(Math.floor(100000 + Math.random() * 900000));
-  await 进入应用(码, true, '我的分组');
-  显示弹层(`
-    <h2>新建成功！</h2>
-    <p class="弹层说明">把共享码发给同事，对方输入后公式自动同步</p>
-    <div class="新建码展示">
-      <div class="码标">共享码</div>
-      <div class="码数">${码}</div>
-      <div class="码注">把这 6 位数字告诉同事即可</div>
-    </div>
-    <button class="btn 弹层主btn" onclick="关闭弹层()">知道了，开始使用</button>`);
+function createGroup() {
+  var code = String(Math.floor(100000+Math.random()*900000));
+  showSheet(
+    '<h2>新建成功！</h2>'+
+    '<p class="sh-desc">把共享码发给同事，对方输入后公式自动同步</p>'+
+    '<div class="new-code-box">'+
+      '<div class="nc-label">共享码</div>'+
+      '<div class="nc-num">'+code+'</div>'+
+      '<div class="nc-note">把这 6 位数字告诉同事即可</div>'+
+    '</div>'+
+    '<button class="sh-main-btn" onclick="closeSheet();enterGroup(\''+code+'\',\'我的分组\')">知道了，开始使用</button>'
+  );
 }
 
 // ══ 应用状态 ══
-let 当前码 = '';
-let 编辑中 = false;
-let 数据 = [];
-let 编号计数 = 1;
-let 同步定时器 = null;
+var currentCode = '', editing = false, cards = [], idSeq = 1, syncTimer = null;
 
-const 默认数据 = () => [
-  { id: 1, 名: '本月用电量', 公式: '本期示数 - 上期示数', 变量: [{ 名: '本期示数（度）', 符: '本期示数', 值: '' }, { 名: '上期示数（度）', 符: '上期示数', 值: '' }], 单位: '度' },
-  { id: 2, 名: '本月电费',   公式: '用电量 * 电价',        变量: [{ 名: '用电量（度）',   符: '用电量',   值: '' }, { 名: '电价（元/度）', 符: '电价', 值: '0.6' }], 单位: '元' },
-  { id: 3, 名: '多户分摊',   公式: '总电费 / 户数',        变量: [{ 名: '总电费（元）',   符: '总电费',   值: '' }, { 名: '户数',         符: '户数', 值: '' }], 单位: '元/户' },
-  { id: 4, 名: '峰谷合计',   公式: '峰段用电 + 谷段用电',  变量: [{ 名: '峰段用电（度）', 符: '峰段用电', 值: '' }, { 名: '谷段用电（度）', 符: '谷段用电', 值: '' }], 单位: '度' },
-];
-
-async function 进入分组(码, 名) {
-  保存分组(码, 名);
-  渲染首页();
-  await 进入应用(码, false, 名);
+function defaultCards() {
+  idSeq = 1;
+  return [
+    {id:idSeq++, name:'本月用电量', formula:'A - B',
+     vars:[{name:'本期示数（度）',sym:'A',val:''},{name:'上期示数（度）',sym:'B',val:''}], unit:'度'},
+    {id:idSeq++, name:'本月电费', formula:'A * B',
+     vars:[{name:'用电量（度）',sym:'A',val:''},{name:'电价（元/度）',sym:'B',val:'0.6'}], unit:'元'},
+    {id:idSeq++, name:'多户分摊', formula:'A / B',
+     vars:[{name:'总电费（元）',sym:'A',val:''},{name:'户数',sym:'B',val:''}], unit:'元/户'},
+    {id:idSeq++, name:'峰谷合计', formula:'A + B',
+     vars:[{name:'峰段用电（度）',sym:'A',val:''},{name:'谷段用电（度）',sym:'B',val:''}], unit:'度'},
+  ];
 }
 
-async function 进入应用(码, 是新建, 名) {
-  当前码 = 码;
-  编辑中 = false;
-  document.getElementById('顶栏码').textContent = 码;
-  document.getElementById('应用标题').textContent = 名;
-  document.getElementById('首页').classList.add('隐藏');
-  document.getElementById('主应用').classList.remove('隐藏');
-  保存分组(码, 名);
+async function enterGroup(code, name) {
+  saveGroup(code, name);
+  renderHome();
+  await enterApp(code, false, name);
+}
 
-  // 立刻显示本地缓存，不卡等待
-  const 本地 = 读缓存(码);
-  if (本地) { 数据 = 本地.列表; 编号计数 = 本地.编号计数 || 数据.length + 1; }
-  else       { 数据 = 默认数据(); 编号计数 = 数据.length + 1; }
-  渲染计算页();
+async function enterApp(code, isNew, name) {
+  currentCode = code; editing = false;
+  document.getElementById('appTitle').textContent = name;
+  document.getElementById('appCode').textContent = code;
+  document.getElementById('editBtn').textContent = '编辑';
+  document.getElementById('editBtn').className = 'btn edit-btn';
+  showPage('appPage');
 
-  if (!获取BinId()) { 设徽章('离线'); 开始定时同步(); return; }
+  var cache = readCache(code);
+  if (cache) { cards = cache.list; idSeq = cache.seq || cards.length+1; }
+  else       { cards = defaultCards(); idSeq = cards.length+1; }
+  renderCards();
 
-  设徽章('同步中');
-
-  // 读云端
-  const 全部 = await 云端读取();
-
-  if (是新建) {
-    // 新建：把初始数据写上去
-    const p = { 列表: 数据, 编号计数, 时间戳: Date.now() };
-    const 新全部 = 全部 || {};
-    新全部[码] = p;
-    const ok = await 云端写入(新全部);
-    if (ok) 存缓存(码, p);
-    设徽章(ok ? '已同步' : '离线');
+  if (!getBinId()) { setBadge('offline'); startSync(); return; }
+  setBadge('syncing');
+  var all = await cloudRead();
+  if (isNew) {
+    var p = {list:cards, seq:idSeq, ts:Date.now()};
+    var newAll = all || {};
+    newAll[code] = p;
+    var ok = await cloudWrite(newAll);
+    if (ok) saveCache(code, p);
+    setBadge(ok?'synced':'offline');
   } else {
-    if (全部 && 全部[码]) {
-      const 云分组 = 全部[码];
-      // 只要云端有，且比本地新，就用云端的
-      if (!本地 || 云分组.时间戳 > 本地.时间戳) {
-        数据 = 云分组.列表;
-        编号计数 = 云分组.编号计数 || 数据.length + 1;
-        存缓存(码, { 列表: 数据, 编号计数, 时间戳: 云分组.时间戳 });
-        渲染计算页();
+    if (all && all[code]) {
+      var g = all[code];
+      if (!cache || g.ts > cache.ts) {
+        cards = g.list; idSeq = g.seq || cards.length+1;
+        saveCache(code, {list:cards, seq:idSeq, ts:g.ts});
+        renderCards();
       }
-      设徽章('已同步');
-    } else if (全部) {
-      // 云端没有这个码，第一次使用，初始化它
-      const p = { 列表: 数据, 编号计数, 时间戳: Date.now() };
-      全部[码] = p;
-      await 云端写入(全部);
-      存缓存(码, p);
-      设徽章('已同步');
+      setBadge('synced');
+    } else if (all) {
+      var p2 = {list:cards, seq:idSeq, ts:Date.now()};
+      all[code] = p2;
+      await cloudWrite(all);
+      saveCache(code, p2);
+      setBadge('synced');
     } else {
-      设徽章('离线');
+      setBadge('offline');
     }
   }
-
-  开始定时同步();
+  startSync();
 }
 
-function 返回首页() {
-  if (同步定时器) { clearInterval(同步定时器); 同步定时器 = null; }
-  document.getElementById('主应用').classList.add('隐藏');
-  document.getElementById('首页').classList.remove('隐藏');
-  渲染首页();
+function goHome() {
+  if (syncTimer) { clearInterval(syncTimer); syncTimer = null; }
+  showPage('homePage');
+  renderHome();
 }
 
-// ══ 定时拉取云端更新 ══
-function 开始定时同步() {
-  if (同步定时器) clearInterval(同步定时器);
-  同步定时器 = setInterval(async () => {
-    if (!获取BinId()) { 设徽章('离线'); return; }
-    const 全部 = await 云端读取();
-    if (!全部) { 设徽章('离线'); return; }
-    const 云分组 = 全部[当前码];
-    if (!云分组) { 设徽章('离线'); return; }
-    const 本地 = 读缓存(当前码);
-    if (云分组.时间戳 > (本地?.时间戳 || 0)) {
-      数据 = 云分组.列表;
-      编号计数 = 云分组.编号计数 || 数据.length + 1;
-      存缓存(当前码, { 列表: 数据, 编号计数, 时间戳: 云分组.时间戳 });
-      渲染计算页();
-      提示('公式已更新', '成功');
+// ══ 定时拉取 ══
+function startSync() {
+  if (syncTimer) clearInterval(syncTimer);
+  syncTimer = setInterval(async function() {
+    if (!getBinId()) { setBadge('offline'); return; }
+    var all = await cloudRead();
+    if (!all) { setBadge('offline'); return; }
+    var g = all[currentCode];
+    if (!g) { setBadge('offline'); return; }
+    var cache = readCache(currentCode);
+    if (g.ts > (cache ? cache.ts : 0)) {
+      cards = g.list; idSeq = g.seq || cards.length+1;
+      saveCache(currentCode, {list:cards, seq:idSeq, ts:g.ts});
+      renderCards();
+      toast('公式已更新', 'success');
     }
-    设徽章('已同步');
+    setBadge('synced');
   }, 10000);
 }
 
-// ══ 推送到云端 ══
-async function 推送云端() {
-  if (!获取BinId()) { 设徽章('离线'); return; }
-  设徽章('同步中');
-  const ts = Date.now();
-  const p = { 列表: 数据, 编号计数, 时间戳: ts };
-  存缓存(当前码, p);
-
-  // 先读最新全量，只改本分组，再写回，避免覆盖其他分组
-  const 全部 = await 云端读取() || {};
-  全部[当前码] = p;
-  const ok = await 云端写入(全部);
-  设徽章(ok ? '已同步' : '离线');
+// ══ 推送云端 ══
+async function pushCloud() {
+  if (!getBinId()) { setBadge('offline'); return; }
+  setBadge('syncing');
+  var ts = Date.now();
+  var p = {list:cards, seq:idSeq, ts:ts};
+  saveCache(currentCode, p);
+  var all = await cloudRead() || {};
+  all[currentCode] = p;
+  var ok = await cloudWrite(all);
+  setBadge(ok ? 'synced' : 'offline');
 }
 
 // ══ 计算 ══
-function 计算(公式, 变量列表) {
+function calcResult(formula, vars) {
   try {
-    let scope = {}, 有空 = false;
-    变量列表.forEach(v => {
-      if (v.值 === '') 有空 = true;
-      scope[v.符] = parseFloat(v.值) || 0;
+    var hasEmpty = false;
+    vars.forEach(function(v){ if(v.val==='') hasEmpty = true; });
+    if (hasEmpty) return {ok:false, empty:true};
+    var expr = formula;
+    // 按符号长度降序替换，避免替换顺序问题
+    vars.slice().sort(function(a,b){ return b.sym.length - a.sym.length; }).forEach(function(v){
+      var re = new RegExp(v.sym.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g');
+      expr = expr.replace(re, String(parseFloat(v.val)||0));
     });
-    if (有空) return { ok: false, empty: true };
-    const r = math.evaluate(公式, scope);
-    if (typeof r === 'number' && isFinite(r)) return { ok: true, 值: Math.round(r * 10000) / 10000 };
-    return { ok: false };
-  } catch (e) { return { ok: false }; }
+    var r = Function('"use strict";return ('+expr+')')();
+    if (typeof r==='number' && isFinite(r)) return {ok:true, val:Math.round(r*10000)/10000};
+    return {ok:false};
+  } catch(e) { return {ok:false}; }
 }
 
-// ══ 渲染计算页 ══
-function 渲染计算页() {
-  const 容 = document.getElementById('内容区');
-  容.innerHTML = '';
-  数据.forEach(w => {
-    const el = document.createElement('div');
-    el.className = '卡片' + (编辑中 ? ' 编辑态' : '');
+// 非编辑态把字母替换成变量名显示
+function displayFormula(w) {
+  var s = w.formula;
+  w.vars.slice().sort(function(a,b){ return b.sym.length-a.sym.length; }).forEach(function(v){
+    var re = new RegExp(v.sym.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g');
+    s = s.replace(re, v.name);
+  });
+  return s;
+}
+
+function makeResultHTML(w) {
+  var res = calcResult(w.formula, w.vars);
+  var unitPart = editing
+    ? '<input class="runit-inp" value="'+esc(w.unit)+'" placeholder="单位" onchange="setUnit('+w.id+',this.value)">'
+    : '<span class="runit">'+w.unit+'</span>';
+  if (res.ok)    return '<div class="rbox"><span class="rlabel">结果</span><span class="rval">'+res.val+'</span>'+unitPart+'</div>';
+  if (res.empty) return '<div class="rbox"><span class="rlabel">结果</span><span class="rempty">——</span>'+unitPart+'</div>';
+  return '<div class="errbox">公式有误（用字母 A B C 对应下方变量，支持 + - * /）</div>';
+}
+
+function refreshResult(id) {
+  var w = cards.find(function(c){ return c.id===id; });
+  var card = document.querySelector('[data-id="'+id+'"]');
+  if (!w||!card) return;
+  var rc = card.querySelector('.result-container');
+  if (rc) rc.innerHTML = makeResultHTML(w);
+}
+
+// ══ 渲染卡片 ══
+function renderCards() {
+  var area = document.getElementById('cardArea');
+  area.innerHTML = '';
+  cards.forEach(function(w) {
+    var el = document.createElement('div');
+    el.className = 'card' + (editing ? ' ed' : '');
     el.dataset.id = w.id;
 
-    const 卡头内容 = 编辑中
-      ? `<input class="卡头名输入" value="${esc(w.名)}" onchange="改名(${w.id},this.value)">
-         <button class="btn 删卡btn" onclick="删卡片(${w.id})">删除</button>`
-      : `<span class="卡头名">${w.名}</span>`;
+    var head = editing
+      ? '<input class="ctitle-inp" value="'+esc(w.name)+'" onchange="setName('+w.id+',this.value)"><button class="btn del-card-btn" onclick="delCard('+w.id+')">删除</button>'
+      : '<span class="ctitle">'+w.name+'</span>';
 
-    const 公式内容 = 编辑中
-      ? `<div style="margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid #EAEAE6">
-           <div class="公式行" style="margin:0;padding:0;border:0">
-             <span class="小标签">公式</span>
-             <input class="公式输入" value="${esc(w.公式)}" oninput="改公式(${w.id},this.value)">
-           </div>
-           <div class="公式提示">变量名须与下方一致，支持 + − * /</div>
-         </div>`
-      : `<div class="公式行"><span class="小标签">公式</span><span class="公式展示">${w.公式}</span></div>`;
+    var frow;
+    if (editing) {
+      var mapping = w.vars.map(function(v){ return v.sym+'='+v.name; }).join('，');
+      frow = '<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #EAEAE6">'
+        +'<div class="frow" style="margin:0;padding:0;border:0">'
+        +'<span class="flabel">公式</span>'
+        +'<input class="finput" value="'+esc(w.formula)+'" oninput="setFormula('+w.id+',this.value)">'
+        +'</div>'
+        +'<div class="fhint">用字母写公式：'+mapping+'<br>支持 + - * /，例如 A - B</div>'
+        +'</div>';
+    } else {
+      frow = '<div class="frow"><span class="flabel">公式</span><span class="fdisplay">'+displayFormula(w)+'</span></div>';
+    }
 
-    const 变量内容 = w.变量.map((v, i) => 编辑中
-      ? `<div class="变量行">
-           <input class="变量名输入" value="${esc(v.名)}" onchange="改变量名(${w.id},${i},this.value)">
-           <input class="数值输入" type="number" inputmode="decimal" value="${v.值}" placeholder="——" oninput="改数值(${w.id},${i},this.value)">
-           ${w.变量.length > 1 ? `<button class="btn 删变量btn" onclick="删变量(${w.id},${i})">删除</button>` : ''}
-         </div>`
-      : `<div class="变量行">
-           <span class="变量名">${v.名}</span>
-           <input class="数值输入" type="number" inputmode="decimal" value="${v.值}" placeholder="请输入" oninput="改数值(${w.id},${i},this.value)">
-         </div>`
-    ).join('');
+    var vars = w.vars.map(function(v,i){
+      return editing
+        ? '<div class="vrow">'
+          +'<div class="sym">'+v.sym+'</div>'
+          +'<input class="vname-inp" value="'+esc(v.name)+'" onchange="setVarName('+w.id+','+i+',this.value)" placeholder="变量名">'
+          +'<input class="numinp" type="number" inputmode="decimal" value="'+v.val+'" placeholder="——" oninput="setVal('+w.id+','+i+',this.value)">'
+          +(w.vars.length>1?'<button class="btn del-var-btn" onclick="delVar('+w.id+','+i+')">删除</button>':'')
+          +'</div>'
+        : '<div class="vrow">'
+          +'<div class="sym">'+v.sym+'</div>'
+          +'<span class="vname">'+v.name+'</span>'
+          +'<input class="numinp" type="number" inputmode="decimal" value="'+v.val+'" placeholder="请输入" oninput="setVal('+w.id+','+i+',this.value)">'
+          +'</div>';
+    }).join('');
 
-    el.innerHTML = `
-      <div class="卡头">${卡头内容}</div>
-      <div class="卡体">
-        ${公式内容}
-        <div class="变量列表">${变量内容}</div>
-        ${编辑中 ? `<button class="btn 加变量btn" onclick="加变量(${w.id})">＋ 新增一行变量</button>` : ''}
-        <div class="结果容器">${生成结果HTML(w)}</div>
-      </div>`;
-    容.appendChild(el);
+    el.innerHTML =
+      '<div class="chead">'+head+'</div>'
+      +'<div class="cbody">'+frow
+      +'<div class="vlist">'+vars+'</div>'
+      +(editing?'<button class="btn add-var-btn" onclick="addVar('+w.id+')">＋ 新增变量</button>':'')
+      +'<div class="result-container">'+makeResultHTML(w)+'</div>'
+      +'</div>';
+    area.appendChild(el);
   });
 
-  if (编辑中) {
-    const b = document.createElement('button');
-    b.className = 'btn 加卡片btn';
-    b.textContent = '＋ 新增计算项目';
-    b.onclick = 加卡片;
-    容.appendChild(b);
+  if (editing) {
+    var ab = document.createElement('button');
+    ab.className = 'btn add-card-btn';
+    ab.textContent = '＋ 新增计算项目';
+    ab.onclick = addCard;
+    area.appendChild(ab);
   }
-
-  const eb = document.getElementById('编辑btn');
-  eb.textContent = 编辑中 ? '完成' : '编辑';
-  eb.className = 'btn 编辑btn' + (编辑中 ? ' 激活' : '');
+  var eb = document.getElementById('editBtn');
+  eb.textContent = editing ? '完成' : '编辑';
+  eb.className = 'btn edit-btn' + (editing ? ' on' : '');
 }
-
-function esc(s) { return String(s).replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
 // ══ 编辑操作 ══
-function 切换编辑() {
-  编辑中 = !编辑中;
-  if (!编辑中) 推送云端();
-  渲染计算页();
-}
-function 改名(id, v) {
-  数据.find(w => w.id === id).名 = v;
-  // 同步更新首页分组名
-  const l = 读分组列表(); const g = l.find(g => g.码 === 当前码);
-  if (g) { g.名 = v; 存分组列表(l); }
-  document.getElementById('应用标题').textContent = v;
-}
-function 生成结果HTML(w) {
-  const res = 计算(w.公式, w.变量);
-  const 单位内容 = 编辑中
-    ? `<input class="单位输入" value="${esc(w.单位)}" placeholder="单位" onchange="改单位(${w.id},this.value)">`
-    : `<span class="结果单位">${w.单位}</span>`;
-  if (res.ok)         return `<div class="结果区"><span class="结果标">结果</span><span class="结果值">${res.值}</span>${单位内容}</div>`;
-  else if (res.empty) return `<div class="结果区"><span class="结果标">结果</span><span class="结果空">——</span>${单位内容}</div>`;
-  else                return `<div class="错误区">公式有误，请在编辑模式下检查</div>`;
-}
+function toggleEdit() { editing=!editing; if(!editing) pushCloud(); renderCards(); }
 
-// 只刷新结果区，不重渲染整页，避免输入框失焦
-function 刷新结果(id) {
-  const w = 数据.find(w => w.id === id);
-  const 卡 = document.querySelector(`[data-id="${id}"]`);
-  if (!卡) return;
-  const 容器 = 卡.querySelector('.结果容器');
-  if (容器) 容器.innerHTML = 生成结果HTML(w);
+function setName(id, v) {
+  var w = cards.find(function(c){ return c.id===id; });
+  if (!w) return;
+  w.name = v;
+  var l = readGroups(); var g = l.find(function(g){ return g.code===currentCode; });
+  if (g) { g.name=v; saveGroups(l); }
+  document.getElementById('appTitle').textContent = v;
 }
+function setFormula(id, v) { var w=cards.find(function(c){return c.id===id;}); if(w){w.formula=v;refreshResult(id);} }
+function setVal(id, i, v)  { var w=cards.find(function(c){return c.id===id;}); if(w){w.vars[i].val=v;refreshResult(id);} }
+function setVarName(id,i,v){ var w=cards.find(function(c){return c.id===id;}); if(w) w.vars[i].name=v; }
+function setUnit(id, v)    { var w=cards.find(function(c){return c.id===id;}); if(w) w.unit=v; }
 
-function 改公式(id, v)   { 数据.find(w => w.id === id).公式 = v; 刷新结果(id); }
-function 改数值(id, i, v){ 数据.find(w => w.id === id).变量[i].值 = v; 刷新结果(id); }
-function 改变量名(id, i, v) {
-  const w = 数据.find(w => w.id === id);
-  const 旧 = w.变量[i].符;
-  const 新 = v.replace(/[（）()\s]/g, '').substring(0, 10) || ('变量' + (i + 1));
-  w.公式 = w.公式.split(旧).join(新);
-  w.变量[i].名 = v;
-  w.变量[i].符 = 新;
-  渲染计算页();
+function addVar(id) {
+  var w = cards.find(function(c){return c.id===id;});
+  if (!w) return;
+  if (w.vars.length >= SYMS.length) { toast('最多支持'+SYMS.length+'个变量','error'); return; }
+  w.vars.push({name:'新变量', sym:SYMS[w.vars.length], val:''});
+  renderCards();
 }
-function 改单位(id, v)   { 数据.find(w => w.id === id).单位 = v; }
-function 加变量(id) {
-  const w = 数据.find(w => w.id === id);
-  const n = '变量' + (w.变量.length + 1);
-  w.变量.push({ 名: n, 符: n, 值: '' });
-  渲染计算页();
+function delVar(id, i) {
+  var w = cards.find(function(c){return c.id===id;});
+  if (w && w.vars.length>1) {
+    w.vars.splice(i,1);
+    w.vars.forEach(function(v,idx){ v.sym=SYMS[idx]; });
+    renderCards();
+  }
 }
-function 删变量(id, i)   { 数据.find(w => w.id === id).变量.splice(i, 1); 渲染计算页(); }
-function 删卡片(id) {
-  if (数据.length <= 1) { 提示('至少保留一个计算项目', '错误'); return; }
+function delCard(id) {
+  if (cards.length<=1) { toast('至少保留一个计算项目','error'); return; }
   if (!confirm('确认删除这个计算项目？')) return;
-  数据 = 数据.filter(w => w.id !== id);
-  渲染计算页();
+  cards = cards.filter(function(c){return c.id!==id;}); renderCards();
 }
-function 加卡片() {
-  数据.push({ id: 编号计数++, 名: '新计算项目', 公式: '变量1 + 变量2', 变量: [{ 名: '变量1', 符: '变量1', 值: '' }, { 名: '变量2', 符: '变量2', 值: '' }], 单位: '' });
-  渲染计算页();
+function addCard() {
+  cards.push({id:++idSeq, name:'新计算项目', formula:'A + B',
+    vars:[{name:'变量1',sym:'A',val:''},{name:'变量2',sym:'B',val:''}], unit:''});
+  renderCards();
 }
 
 // ══ 工具 ══
-function 设徽章(s) {
-  const el = document.getElementById('同步徽章');
-  el.className = '同步徽章';
-  if (s === '同步中') { el.classList.add('徽同步中'); el.textContent = '同步中…'; }
-  else if (s === '已同步') { el.classList.add('徽已同步'); el.textContent = '已同步'; }
-  else { el.classList.add('徽离线'); el.textContent = '离线'; }
+function setBadge(s) {
+  var el = document.getElementById('syncBadge');
+  if (!el) return;
+  el.className = 'sync-badge';
+  if (s==='syncing') { el.classList.add('b-syncing'); el.textContent='同步中…'; }
+  else if (s==='synced') { el.classList.add('b-synced'); el.textContent='已同步'; }
+  else { el.classList.add('b-offline'); el.textContent='离线'; }
 }
-let 提示定时器 = null;
-function 提示(文字, 类型 = '普通') {
-  const el = document.getElementById('提示条');
-  el.textContent = 文字;
-  el.className = '提示条 显示 ' + (类型 === '成功' ? '提示成功' : 类型 === '错误' ? '提示错误' : '提示普通');
-  if (提示定时器) clearTimeout(提示定时器);
-  提示定时器 = setTimeout(() => el.classList.remove('显示'), 2800);
+var toastTimer = null;
+function toast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = (type==='success'?'t-success':type==='error'?'t-error':'t-info') + ' show';
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
 }
+function esc(s) { return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
-// ══ 启动 ══
-启动();
+startup();
 </script>
 </body>
 </html>
